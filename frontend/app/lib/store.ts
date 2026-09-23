@@ -1,18 +1,15 @@
 import { promises as fs } from "fs";
 import path from "path";
-import type { AdminReport } from "./types";
+import type { AdminReport, ReportStatus } from "./types";
 
 /**
- * Minimal JSON-file-backed store so the admin dashboard has somewhere to
- * read from without wiring up a real database first.
- *
- * Swap this module out for your actual persistence layer (Postgres via
- * Prisma, Supabase, DynamoDB, whatever) — every function here is small and
- * self-contained specifically so it's a drop-in replacement. Nothing outside
- * this file needs to change if the function signatures stay the same.
+ * File-backed report store (reverted from the MySQL version).
  *
  * Not safe for concurrent writes at real scale (no file locking) — fine for
- * a prototype/demo, not for production traffic.
+ * a prototype/demo, not for production traffic. Swap this out for a real
+ * database later and keep the same three function signatures
+ * (listReports / insertReport / updateReportStatus) so nothing else in the
+ * app has to change.
  */
 
 const DATA_DIR = path.join(process.cwd(), "data");
@@ -72,9 +69,14 @@ export async function insertReport(report: AdminReport): Promise<AdminReport> {
   return report;
 }
 
+/**
+ * Updates a single report's workflow status.
+ * Used by the PATCH handler in app/api/reports/route.ts (and by the
+ * admin dashboard, which calls that route).
+ */
 export async function updateReportStatus(
   id: string,
-  status: AdminReport["status"]
+  status: ReportStatus
 ): Promise<AdminReport | null> {
   const all = await readAll();
   const index = all.findIndex((r) => r.id === id);

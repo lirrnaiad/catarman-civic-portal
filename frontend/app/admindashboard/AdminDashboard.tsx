@@ -52,10 +52,10 @@ export default function AdminDashboard({ initialReports }: AdminDashboardProps) 
     // Optimistic update so the click feels immediate.
     setReports((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
     try {
-      const res = await fetch(`/api/reports/${id}`, {
+      const res = await fetch(`/api/reports`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({ id, status }),
       });
       if (!res.ok) throw new Error("Update failed");
     } catch {

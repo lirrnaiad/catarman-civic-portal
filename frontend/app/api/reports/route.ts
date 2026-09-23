@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { AdminReport, ReportCategory, ReportPayload, ReportPhoto } from "@/app/lib/types";
-import { insertReport, listReports } from "@/app/lib/store";
+import type { AdminReport, ReportCategory, ReportPayload, ReportPhoto, ReportStatus } from "@/app/lib/types";
+import { insertReport, listReports, updateReportStatus } from "@/app/lib/store";
 
 // Uses the Node.js filesystem via lib/store — must not run on the Edge runtime.
 export const runtime = "nodejs";
@@ -12,11 +12,14 @@ const VALID_CATEGORIES: ReportCategory[] = [
   "infrastructure",
 ];
 
+const VALID_STATUSES: ReportStatus[] = ["new", "in_progress", "resolved"];
+
 /**
  * Default receiving endpoint for <ReportForm />, used when the component is
  * NOT given an `onSubmit` prop. Also the endpoint the offline sync flush
  * (lib/offlineSync.ts) posts queued reports back to once connectivity
- * returns, and the endpoint the admin dashboard reads from.
+ * returns, and the endpoint the admin dashboard reads from and updates
+ * report status through.
  *
  * This is the integration point: swap the body of the try block to write to
  * your own database, push to a queue, or forward to an external system's
@@ -116,4 +119,38 @@ export async function GET(req: NextRequest) {
     status: searchParams.get("status") ?? undefined,
   });
   return NextResponse.json({ ok: true, reports });
+}
+
+/**
+ * Status update for the admin dashboard's status toggle (New / In Progress
+ * / Resolved). Takes `{ id, status }` in the JSON body rather than a URL
+ * segment, so it lives in this same file instead of a separate
+ * app/api/reports/[id]/route.ts.
+ *
+ * If your host app already calls PATCH /api/reports/:id (a dynamic route),
+ * point it at this endpoint instead with a JSON body of { id, status }, or
+ * keep a thin [id]/route.ts that reads params.id and forwards to
+ * updateReportStatus the same way this does.
+ */
+export async function PATCH(req: NextRequest) {
+  const body = await req.json().catch(() => null);
+  const id = body?.id;
+  const status = body?.status;
+
+  if (typeof id !== "string" || !id) {
+    return NextResponse.json({ ok: false, message: "id is required." }, { status: 400 });
+  }
+  if (!VALID_STATUSES.includes(status)) {
+    return NextResponse.json(
+      { ok: false, message: `status must be one of ${VALID_STATUSES.join(", ")}` },
+      { status: 400 }
+    );
+  }
+
+  const updated = await updateReportStatus(id, status);
+  if (!updated) {
+    return NextResponse.json({ ok: false, message: "Report not found." }, { status: 404 });
+  }
+
+  return NextResponse.json({ ok: true, report: updated });
 }
