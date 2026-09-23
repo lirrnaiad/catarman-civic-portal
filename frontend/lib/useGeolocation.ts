@@ -19,17 +19,25 @@ function isGeolocationSupported() {
 }
 
 export function useGeolocation(): GeolocationState {
-  const [state, setState] = useState<GeolocationState>(() =>
-    isGeolocationSupported() ? { status: "idle" } : { status: "unsupported" },
-  );
+  // Initial state must be identical on server and client — the server has
+  // no `navigator`, so isGeolocationSupported() can't run at initializer
+  // time without producing a different first paint than the client and
+  // causing a hydration mismatch. "idle" is a safe, environment-independent
+  // starting point; the real detection happens below, in an effect, which
+  // only ever runs client-side after hydration.
+  const [state, setState] = useState<GeolocationState>({ status: "idle" });
 
   useEffect(() => {
-    if (!isGeolocationSupported()) return;
+    // Both of these setState calls are synchronizing React with an external
+    // system (the browser's Geolocation API) per the effect's own job, not
+    // state that could have been computed during render — see note above on
+    // why "unsupported" can't be the initial value.
+    if (!isGeolocationSupported()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setState({ status: "unsupported" });
+      return;
+    }
 
-    // Synchronous setState here just reflects that we're about to call out
-    // to the Geolocation API (an external system) below — the actual
-    // subscription/callback is async, this is only the "waiting" state.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setState({ status: "loading" });
     const watchId = navigator.geolocation.getCurrentPosition(
       (position) => {
