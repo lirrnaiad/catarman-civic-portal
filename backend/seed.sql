@@ -3,15 +3,20 @@
 --
 -- Sources: Catarman's 55 barangays and poblacion/urban classification are
 -- from Wikipedia ("Catarman, Northern Samar") and PhilAtlas, cross-checked
--- Sept 2026. Coordinates for Catarman Cathedral, Catarman National High
--- School (Brgy. Dalakit), and Brgy. Polangi are sourced/real; all other
--- barangay centroids are deterministically jittered around the town center
--- for demo purposes only — swap in real GPS pins post-hackathon.
+-- Sept 2026. St. Michael Academy, Capitol Gym, Catarman National High
+-- School, and Northern Samar Colleges have real pin-dropped coordinates;
+-- Catarman Cathedral and PAGCOR (Brgy. Polangi) use real but
+-- building-imprecise coordinates from earlier research; Municipal
+-- Evacuation Center and Liga ng mga Barangay Building still reuse their
+-- barangay's centroid as a placeholder. All barangay centroids (used for
+-- reference/dropdowns and the Uwan-scenario report pins) are
+-- deterministically jittered around the town center — swap in real GPS
+-- pins post-hackathon if time allows.
 --
--- ⚠️ Named evacuation centers total 9 here, per tonight's-prep research.
--- Still need to confirm with MDRRMO whether PAGCOR is the 10th of "ten
--- designated centers" or an 11th, newer addition — don't state a hard
--- count to the DRRMO judge until that's confirmed.
+-- ⚠️ Named evacuation centers total 8 here, per tonight's-prep research.
+-- Still need to confirm with MDRRMO how PAGCOR counts against the
+-- documented "ten designated centers" shortfall — don't state a hard
+-- number to the DRRMO judge until that's confirmed.
 
 TRUNCATE TABLE barangays;
 TRUNCATE TABLE evacuation_centers;
@@ -78,10 +83,10 @@ INSERT INTO barangays (name, lat, lng) VALUES
 ('Yakal', 12.490191, 124.645432);
 
 -- ---------------------------------------------------------------------------
--- Evacuation centers (9) — capacity/occupancy staged for the live demo:
--- Catarman Cathedral (dead-center Poblacion) is FULL, St. Michael Academy
--- and Annex Building are FULL/over capacity, Catarman National High School
--- is AMBER (near capacity), the rest are GREEN/open. This guarantees the
+-- Evacuation centers (8) — capacity/occupancy staged for the live demo:
+-- Catarman Cathedral (dead-center Poblacion) and St. Michael Academy are
+-- FULL/over capacity, Capitol Gym and Catarman National High School are
+-- AMBER (near capacity), the rest are GREEN/open. This guarantees the
 -- nearest-open-center locator has to visibly skip a full center when the
 -- demo location pin is dropped in the Poblacion.
 -- Color thresholds assumed: <70% green, 70-99% amber, >=100% red.
@@ -89,12 +94,11 @@ INSERT INTO barangays (name, lat, lng) VALUES
 INSERT INTO evacuation_centers (name, barangay, lat, lng, capacity, current_occupancy) VALUES
 ('Municipal Evacuation Center', 'Yakal', 12.490191, 124.645432, 800, 420),
 ('Catarman Cathedral', 'Jose P. Rizal', 12.498694, 124.6365, 1200, 1200),
-('St. Michael Academy', 'Casoy', 12.505873, 124.636417, 600, 610),
+('St. Michael Academy', 'Casoy', 12.498731618595883, 124.6360851456436, 600, 610),
 ('Liga ng mga Barangay Building', 'Yakal', 12.4908, 124.6447, 300, 150),
-('Catarman National High School / Capitol Gym', 'Dalakit', 12.5051, 124.62509, 2500, 1800),
-('CLTT Building', 'Narra', 12.49759, 124.627539, 400, 100),
-('Annex Building', 'Molave', 12.500264, 124.641122, 350, 350),
-('Northern Samar Colleges', 'Ipil-ipil', 12.492938, 124.645924, 1000, 300),
+('Capitol Gym', 'Dalakit', 12.503987369810867, 124.63346392543018, 2500, 1800),
+('Catarman National High School', 'Dalakit', 12.503129362269114, 124.62425960592061, 1500, 1400),
+('Northern Samar Colleges', 'Ipil-ipil', 12.498785663544979, 124.63851616235634, 1000, 300),
 ('PAGCOR Multi-Purpose Evacuation Center', 'Polangi', 12.3971, 124.6298, 6000, 3200);
 
 -- ---------------------------------------------------------------------------
