@@ -1,0 +1,63 @@
+.shell {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #d7ddd9;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+.pinIcon {
+  background: transparent;
+  border: none;
+}
+
+.popup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 160px;
+  font-size: 0.85rem;
+}
+
+.popupBarangay {
+  color: #5c6b67;
+  font-size: 0.78rem;
+}
+
+.popupDescription {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.popupStatusLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #3c4a46;
+}
+
+.selectionNote {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.72rem;
+  color: #3c4a46;
+  z-index: 500;
+}
+
+@media (min-width: 900px) {
+  .shell {
+    height: 480px;
+  }
+}

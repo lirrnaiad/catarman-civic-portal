@@ -1,0 +1,39 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  color: #16211f;
+  font-family: -apple-system, "Segoe UI", "Public Sans", system-ui, sans-serif;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  color: #6b7a76;
+}
+
+.mapPlaceholder {
+  height: 320px;
+  border-radius: 10px;
+  border: 1px solid #d7ddd9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7a76;
+  font-size: 0.9rem;
+}
