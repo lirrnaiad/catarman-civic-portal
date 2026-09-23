@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Icon from "@/components/Icon";
 
 const events = [
   {
@@ -49,22 +50,23 @@ export default async function EventDetailsPage({
 
   if (!event) {
     return (
-      <main className="min-h-screen bg-gray-50 px-5 py-8">
+      <main className="min-h-screen bg-background px-5 py-8">
         <div className="mx-auto max-w-3xl">
 
           <Link
             href="/events"
-            className="text-sm font-semibold text-blue-600"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-civic"
           >
-            ← Back to Events
+            <Icon name="arrowLeft" className="h-4 w-4" />
+            Back to Events
           </Link>
 
           <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-slate-900">
               Event not found
             </h1>
 
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-slate-600">
               The event you are looking for does not exist.
             </p>
           </div>
@@ -75,22 +77,23 @@ export default async function EventDetailsPage({
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 px-5 py-8">
+    <main className="min-h-screen bg-background px-5 py-8">
       <div className="mx-auto max-w-3xl">
 
         {/* Back button */}
         <Link
           href="/events"
-          className="inline-block text-sm font-semibold text-blue-600 hover:text-blue-800"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-civic hover:text-civic-hover"
         >
-          ← Back to Events
+          <Icon name="arrowLeft" className="h-4 w-4" />
+          Back to Events
         </Link>
 
         {/* Event card */}
         <div className="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm">
 
           {/* Date banner */}
-          <div className="bg-blue-600 px-6 py-8 text-white">
+          <div className="bg-civic-strong px-6 py-8 text-white">
             <p className="text-sm font-semibold">
               {event.month}
             </p>
@@ -103,52 +106,52 @@ export default async function EventDetailsPage({
           {/* Event details */}
           <div className="p-6">
 
-            <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
+            <p className="text-sm font-semibold uppercase tracking-wide text-civic">
               {event.agency}
             </p>
 
-            <h1 className="mt-2 text-3xl font-bold text-gray-900">
+            <h1 className="mt-2 text-3xl font-bold text-slate-900">
               {event.title}
             </h1>
 
             <div className="mt-8 space-y-6">
 
               <div>
-                <p className="text-sm font-semibold text-gray-500">
+                <p className="text-sm font-semibold text-slate-500">
                   Date
                 </p>
 
-                <p className="mt-1 text-gray-900">
+                <p className="mt-1 text-slate-900">
                   September {event.day}, 2026
                 </p>
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-gray-500">
+                <p className="text-sm font-semibold text-slate-500">
                   Time
                 </p>
 
-                <p className="mt-1 text-gray-900">
+                <p className="mt-1 text-slate-900">
                   {event.time}
                 </p>
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-gray-500">
+                <p className="text-sm font-semibold text-slate-500">
                   Location
                 </p>
 
-                <p className="mt-1 text-gray-900">
+                <p className="mt-1 text-slate-900">
                   {event.location}
                 </p>
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-gray-500">
+                <p className="text-sm font-semibold text-slate-500">
                   Description
                 </p>
 
-                <p className="mt-2 leading-7 text-gray-600">
+                <p className="mt-2 leading-7 text-slate-600">
                   {event.description}
                 </p>
               </div>

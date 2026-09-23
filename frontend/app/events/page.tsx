@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import Icon from "@/components/Icon";
 
 const events = [
   {
@@ -79,7 +80,7 @@ export default function EventsPage() {
   );
 
   return (
-    <main className="min-h-screen bg-[#F5F9F8] text-[#10233F]">
+    <main className="min-h-screen bg-background text-slate-900">
 
       {/* =====================================================
           SIDEBAR
@@ -97,10 +98,7 @@ export default function EventsPage() {
           h-screen
           w-64
           border-0
-          bg-gradient-to-b
-          from-emerald-600
-          via-emerald-500
-          to-teal-500
+          bg-civic-strong
           px-5
           py-6
           text-white
@@ -114,8 +112,8 @@ export default function EventsPage() {
 
           <div className="flex items-center gap-3">
 
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/20 text-xl shadow-sm">
-              🌿
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/20 shadow-sm">
+              <Icon name="shield" className="h-6 w-6" />
             </div>
 
             <div>
@@ -155,12 +153,12 @@ export default function EventsPage() {
               transition-all
               duration-200
               hover:bg-white
-              hover:text-emerald-600
+              hover:text-civic
               active:scale-90
             "
             aria-label="Close sidebar"
           >
-            ✕
+            <Icon name="close" />
           </button>
 
         </div>
@@ -186,12 +184,12 @@ export default function EventsPage() {
               transition-all
               duration-300
               hover:bg-white
-              hover:text-emerald-600
+              hover:text-civic
               hover:shadow-md
             "
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-lg transition-all duration-300 group-hover:bg-emerald-100">
-              🏠
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-lg transition-all duration-300 group-hover:bg-civic-muted">
+              <Icon name="home" />
             </span>
 
             <span className="font-medium">
@@ -219,11 +217,11 @@ export default function EventsPage() {
               transition-all
               duration-300
               hover:bg-white
-              hover:text-emerald-600
+              hover:text-civic
             "
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20 text-lg transition-all duration-300 group-hover:bg-emerald-100">
-              📅
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20 text-lg transition-all duration-300 group-hover:bg-civic-muted">
+              <Icon name="calendar" />
             </span>
 
             <span>
@@ -250,12 +248,12 @@ export default function EventsPage() {
               transition-all
               duration-300
               hover:bg-white
-              hover:text-emerald-600
+              hover:text-civic
               hover:shadow-md
             "
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-lg transition-all duration-300 group-hover:bg-emerald-100">
-              ▦
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-lg transition-all duration-300 group-hover:bg-civic-muted">
+              <Icon name="grid" />
             </span>
 
             <span className="font-medium">
@@ -282,12 +280,12 @@ export default function EventsPage() {
               transition-all
               duration-300
               hover:bg-white
-              hover:text-emerald-600
+              hover:text-civic
               hover:shadow-md
             "
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-lg transition-all duration-300 group-hover:bg-emerald-100">
-              🔔
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-lg transition-all duration-300 group-hover:bg-civic-muted">
+              <Icon name="bell" />
             </span>
 
             <span className="font-medium">
@@ -314,12 +312,12 @@ export default function EventsPage() {
               transition-all
               duration-300
               hover:bg-white
-              hover:text-emerald-600
+              hover:text-civic
               hover:shadow-md
             "
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-lg transition-all duration-300 group-hover:bg-emerald-100">
-              ⓘ
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-lg transition-all duration-300 group-hover:bg-civic-muted">
+              <Icon name="info" />
             </span>
 
             <span className="font-medium">
@@ -362,10 +360,7 @@ export default function EventsPage() {
             h-20
             items-center
             gap-4
-            bg-gradient-to-r
-            from-emerald-600
-            via-emerald-500
-            to-teal-500
+            bg-civic-strong
             px-4
             text-white
             shadow-sm
@@ -393,13 +388,13 @@ export default function EventsPage() {
               transition-all
               duration-300
               hover:bg-white
-              hover:text-emerald-600
+              hover:text-civic
               hover:shadow-md
               active:scale-90
             "
             aria-label="Open sidebar"
           >
-            ☰
+            <Icon name="menu" className="h-6 w-6" />
           </button>
 
 
@@ -430,9 +425,7 @@ export default function EventsPage() {
               "
             >
 
-              <span>
-                🔍
-              </span>
+              <Icon name="search" />
 
               <input
                 type="text"
@@ -473,8 +466,9 @@ export default function EventsPage() {
                 Stay informed about what's happening in your community.
               </p>
 
-              <p className="mt-3 text-sm font-semibold text-emerald-600">
-                📍 Catarman, Northern Samar
+              <p className="mt-3 flex items-center gap-1.5 text-sm font-semibold text-civic">
+                <Icon name="mapPin" className="h-4 w-4" />
+                Catarman, Northern Samar
               </p>
 
             </div>
@@ -483,23 +477,27 @@ export default function EventsPage() {
             <button
               type="button"
               className="
+                inline-flex
+                items-center
+                gap-2
                 rounded-full
-                bg-emerald-100
+                bg-civic-muted
                 px-6
                 py-3
                 text-sm
                 font-bold
-                text-emerald-700
+                text-civic
                 shadow-sm
                 transition-all
                 duration-300
-                hover:bg-emerald-200
+                hover:bg-civic-line
                 hover:-translate-y-0.5
                 hover:shadow-md
                 active:scale-95
               "
             >
-              All Events →
+              All Events
+              <Icon name="arrowRight" className="h-4 w-4" />
             </button>
 
           </div>
@@ -540,7 +538,7 @@ export default function EventsPage() {
                       September 2026
                     </h3>
 
-                    <p className="mt-1 text-xs text-slate-400">
+                    <p className="mt-1 text-xs text-slate-500">
                       Select a date to view events
                     </p>
 
@@ -568,8 +566,9 @@ export default function EventsPage() {
                         hover:bg-slate-200
                         active:scale-90
                       "
+                      aria-label="Previous month"
                     >
-                      ‹
+                      <Icon name="chevronLeft" />
                     </button>
 
                     <button
@@ -589,8 +588,9 @@ export default function EventsPage() {
                         hover:bg-slate-200
                         active:scale-90
                       "
+                      aria-label="Next month"
                     >
-                      ›
+                      <Icon name="chevronRight" />
                     </button>
 
                   </div>
@@ -600,7 +600,7 @@ export default function EventsPage() {
 
                 {/* WEEKDAYS */}
 
-                <div className="mb-3 grid grid-cols-7 text-center text-xs font-semibold text-slate-400">
+                <div className="mb-3 grid grid-cols-7 text-center text-xs font-semibold text-slate-500">
 
                   <span className="text-red-500">
                     Sun
@@ -660,7 +660,7 @@ export default function EventsPage() {
 
                           ${
                             selected
-                              ? "scale-105 bg-blue-600 text-white shadow-md shadow-blue-200"
+                              ? "scale-105 bg-civic text-white shadow-md shadow-blue-200"
                               : "text-slate-700 hover:scale-105 hover:bg-slate-100"
                           }
                         `}
@@ -682,10 +682,10 @@ export default function EventsPage() {
 
                               ${
                                 event.category === "Safety"
-                                  ? "bg-blue-600"
+                                  ? "bg-civic"
                                   : event.category === "Environment"
                                   ? "bg-orange-400"
-                                  : "bg-emerald-500"
+                                  : "bg-violet-600"
                               }
                             `}
                           />
@@ -704,12 +704,12 @@ export default function EventsPage() {
                 <div className="mt-6 flex flex-wrap gap-x-5 gap-y-3 border-t border-slate-100 pt-5 text-xs text-slate-500">
 
                   <span className="flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-violet-600" />
                     Community
                   </span>
 
                   <span className="flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-blue-600" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-civic" />
                     Safety
                   </span>
 
@@ -740,9 +740,10 @@ export default function EventsPage() {
 
                   <button
                     type="button"
-                    className="font-semibold text-emerald-600 transition-colors duration-200 hover:text-emerald-700"
+                    className="inline-flex items-center gap-1.5 font-semibold text-civic transition-colors duration-200 hover:text-civic-hover"
                   >
-                    See All →
+                    See All
+                    <Icon name="arrowRight" className="h-4 w-4" />
                   </button>
 
                 </div>
@@ -769,7 +770,7 @@ export default function EventsPage() {
                         transition-all
                         duration-300
                         hover:-translate-y-1
-                        hover:border-emerald-200
+                        hover:border-civic-line
                         hover:shadow-lg
                       "
                     >
@@ -783,45 +784,51 @@ export default function EventsPage() {
                           items-center
                           justify-center
                           rounded-xl
-                          text-xl
 
                           ${
                             event.category === "Safety"
-                              ? "bg-blue-100 text-blue-600"
+                              ? "bg-civic-muted text-civic"
                               : event.category === "Environment"
                               ? "bg-orange-100 text-orange-600"
-                              : "bg-emerald-100 text-emerald-600"
+                              : "bg-violet-100 text-violet-700"
                           }
                         `}
                       >
-                        {event.category === "Safety"
-                          ? "🛡️"
-                          : event.category === "Environment"
-                          ? "🍃"
-                          : "👥"}
+                        <Icon
+                          name={
+                            event.category === "Safety"
+                              ? "shield"
+                              : event.category === "Environment"
+                              ? "leaf"
+                              : "users"
+                          }
+                          className="h-6 w-6"
+                        />
                       </div>
 
 
                       <div className="min-w-0 flex-1">
 
-                        <h4 className="font-bold text-slate-900 transition-colors duration-200 group-hover:text-emerald-700">
+                        <h4 className="font-bold text-slate-900 transition-colors duration-200 group-hover:text-civic">
                           {event.title}
                         </h4>
 
-                        <p className="mt-1 text-xs text-slate-500">
-                          🕐 {event.time}
+                        <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
+                          <Icon name="clock" className="h-3.5 w-3.5" />
+                          {event.time}
                         </p>
 
-                        <p className="mt-1 text-xs text-slate-500">
-                          📍 {event.location}
+                        <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
+                          <Icon name="mapPin" className="h-3.5 w-3.5" />
+                          {event.location}
                         </p>
 
                       </div>
 
 
-                      <div className="hidden rounded-xl bg-slate-100 px-4 py-2 text-center transition-colors duration-200 group-hover:bg-emerald-50 sm:block">
+                      <div className="hidden rounded-xl bg-slate-100 px-4 py-2 text-center transition-colors duration-200 group-hover:bg-civic-soft sm:block">
 
-                        <p className="text-[10px] font-bold text-emerald-600">
+                        <p className="text-[10px] font-bold text-civic">
                           SEP
                         </p>
 
@@ -865,20 +872,18 @@ export default function EventsPage() {
 
                   <div className="mb-6 flex items-center justify-between">
 
-                    <span className="text-sm font-semibold text-blue-600">
+                    <span className="text-sm font-semibold text-civic">
                       Event Details
                     </span>
 
-                    <span className="text-lg text-slate-400">
-                      ↗
-                    </span>
+                    <Icon name="arrowUpRight" className="h-5 w-5 text-slate-500" />
 
                   </div>
 
 
-                  <div className="rounded-2xl bg-blue-50 p-6">
+                  <div className="rounded-2xl bg-civic-soft p-6">
 
-                    <p className="text-xs font-bold uppercase tracking-wide text-blue-600">
+                    <p className="text-xs font-bold uppercase tracking-wide text-civic">
                       {selectedEvent.category}
                     </p>
 
@@ -897,12 +902,13 @@ export default function EventsPage() {
 
                   <div className="mt-7">
 
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                       When
                     </p>
 
-                    <p className="mt-2 font-bold text-slate-800">
-                      🕐 {selectedEvent.time}
+                    <p className="mt-2 flex items-center gap-2 font-bold text-slate-800">
+                      <Icon name="clock" className="h-4 w-4 text-civic" />
+                      {selectedEvent.time}
                     </p>
 
                   </div>
@@ -912,12 +918,13 @@ export default function EventsPage() {
 
                   <div className="mt-6">
 
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Where
                     </p>
 
-                    <p className="mt-2 font-bold text-slate-800">
-                      📍 {selectedEvent.location} • Catarman
+                    <p className="mt-2 flex items-center gap-2 font-bold text-slate-800">
+                      <Icon name="mapPin" className="h-4 w-4 text-civic" />
+                      {selectedEvent.location} • Catarman
                     </p>
 
                   </div>
@@ -927,7 +934,7 @@ export default function EventsPage() {
 
                   <div className="mt-6">
 
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                       About this event
                     </p>
 
@@ -944,28 +951,33 @@ export default function EventsPage() {
                     type="button"
                     className="
                       mt-8
+                      flex
                       w-full
+                      items-center
+                      justify-center
+                      gap-2
                       rounded-full
-                      bg-blue-600
+                      bg-civic
                       py-4
                       font-bold
                       text-white
                       shadow-sm
                       transition-all
                       duration-300
-                      hover:bg-blue-700
+                      hover:bg-civic-hover
                       hover:-translate-y-0.5
                       hover:shadow-lg
                       active:scale-[0.98]
                     "
                   >
-                    📅 Add to my calendar
+                    <Icon name="calendar" />
+                    Add to my calendar
                   </button>
 
 
                   {/* PUBLISHED */}
 
-                  <div className="mt-7 border-t border-slate-100 pt-5 text-center text-xs text-slate-400">
+                  <div className="mt-7 border-t border-slate-100 pt-5 text-center text-xs text-slate-500">
                     Published by Municipal DRRM Office
                   </div>
 
