@@ -1,0 +1,99 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filterInput {
+  flex: 1 1 160px;
+  border: 1.5px solid #d7ddd9;
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  background: #fff;
+}
+
+.tableScroll {
+  overflow-x: auto;
+  border: 1px solid #e2e6e3;
+  border-radius: 10px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 640px;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  background: #f2f4f2;
+  color: #3c4a46;
+  font-weight: 600;
+  border-bottom: 1px solid #e2e6e3;
+}
+
+.table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #eef0ee;
+  vertical-align: top;
+}
+
+.row {
+  cursor: pointer;
+}
+
+.row:hover {
+  background: #f7f8f6;
+}
+
+.rowSelected {
+  cursor: pointer;
+  background: #eef3f2;
+}
+
+.descriptionCell {
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty {
+  text-align: center;
+  color: #6b7a76;
+  padding: 1.25rem;
+}
+
+.statusSelect {
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+.status_new {
+  background: #fdecea;
+  color: #a03b2e;
+}
+
+.status_in_progress {
+  background: #fff3d9;
+  color: #8a6300;
+}
+
+.status_resolved {
+  background: #e6f4ea;
+  color: #226a3c;
+}
