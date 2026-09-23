@@ -5,6 +5,9 @@ import { insertReport, listReports } from "@/lib/store";
 // Talks to MySQL via lib/store (mysql2 needs Node) — must not run on the Edge runtime.
 export const runtime = "nodejs";
 
+// Raster formats only: an SVG "photo" can carry script.
+const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
 const VALID_CATEGORIES: ReportCategory[] = [
   "flood_landslide",
   "garbage",
@@ -32,7 +35,11 @@ export async function POST(req: NextRequest) {
     if (contentType.includes("application/json")) {
       // Comes from the offline queue flush (lib/offlineSync.ts) — photos are
       // already base64 data URLs from when the report was first queued.
-      payload = (await req.json()) as ReportPayload;
+      const body = await req.json().catch(() => null);
+      if (!body || typeof body !== "object") {
+        return NextResponse.json({ ok: false, message: "Invalid JSON." }, { status: 400 });
+      }
+      payload = body as ReportPayload;
     } else {
       // Comes from a live submission from <ReportForm />.
       const formData = await req.formData();
@@ -80,11 +87,24 @@ export async function POST(req: NextRequest) {
       );
     }
     payload.description = (payload.description ?? "").trim();
+    // JSON from the offline queue isn't typed at runtime: default what the store relies on.
+    if (!Array.isArray(payload.photos)) payload.photos = [];
+    // Keep the report even when a photo is unusable: losing an emergency
+    // report is worse than losing one picture. Anything that isn't a raster
+    // image (e.g. SVG, which can carry script) is dropped, and at most 5 kept.
+    const validPhoto = (p: ReportPhoto) =>
+      typeof p?.fileName === "string" &&
+      typeof p.mimeType === "string" &&
+      typeof p.dataUrl === "string" &&
+      PHOTO_TYPES.some((t) => p.mimeType === t && p.dataUrl.startsWith(`data:${t};base64,`));
+    payload.photos = payload.photos.filter(validPhoto).slice(0, 5);
+    const receivedAt = new Date().toISOString();
+    if (Number.isNaN(Date.parse(payload.createdAt))) payload.createdAt = receivedAt;
 
     const stored: AdminReport = {
       ...payload,
       status: "new",
-      receivedAt: new Date().toISOString(),
+      receivedAt,
     };
     await insertReport(stored);
 
@@ -92,11 +112,16 @@ export async function POST(req: NextRequest) {
     // Forward to another system's API/webhook in addition to local storage.
     const webhookUrl = process.env.EXTERNAL_REPORTS_WEBHOOK_URL;
     if (webhookUrl) {
-      await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      // The report is already stored: a webhook failure must not tell the citizen it failed.
+      try {
+        await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } catch (err) {
+        console.error("Report stored, but forwarding to the webhook failed", err);
+      }
     }
     // --------------------------------------------------------------------------
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createEvent, listEvents } from "@/lib/events";
 import { parseEventInput } from "@/lib/eventInput";
 import { getSession } from "@/lib/session";
+import { audit } from "@/lib/audit";
 
 export const runtime = "nodejs";
 
@@ -20,5 +21,6 @@ export async function POST(req: NextRequest) {
   if ("error" in parsed) return NextResponse.json({ ok: false, message: parsed.error }, { status: 400 });
 
   const event = await createEvent(session.agency, parsed.input);
+  audit(session, "event.create", { id: event.id, title: event.title });
   return NextResponse.json({ ok: true, event }, { status: 201 });
 }

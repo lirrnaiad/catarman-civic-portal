@@ -5,7 +5,8 @@ import { getEvent } from "@/lib/events";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: PageProps<"/events/[id]">) {
-  const event = await getEvent(Number((await params).id));
+  const id = Number((await params).id);
+  const event = Number.isInteger(id) ? await getEvent(id) : null;
   return { title: event ? `${event.title} · Catarman Civic Portal` : "Event not found" };
 }
 

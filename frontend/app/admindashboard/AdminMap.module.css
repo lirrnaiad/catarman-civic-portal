@@ -33,6 +33,11 @@
 .popupDescription {
   margin: 0;
   font-size: 0.82rem;
+  /* Full text lives in the detail panel ("View details"). */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .popupStatusLabel {
@@ -60,4 +65,20 @@
   .shell {
     height: 480px;
   }
+}
+.popupDetails {
+  margin-top: 0.5rem;
+  width: 100%;
+  min-height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: var(--civic);
+  color: #fff;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.popupDetails:hover {
+  background: var(--civic-hover);
 }

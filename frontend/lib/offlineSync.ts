@@ -49,6 +49,12 @@ export async function flushQueue(): Promise<void> {
       if (res.ok) {
         await dequeueReport(payload.id);
         flushed += 1;
+      } else if (res.status === 400 || res.status === 413) {
+        // The server rejected this report itself; resending the same data
+        // would fail forever (and re-upload its photos every 30s).
+        console.warn(`Dropping queued report ${payload.id}: server responded ${res.status}`);
+        await dequeueReport(payload.id);
+        failed += 1;
       } else {
         failed += 1;
       }

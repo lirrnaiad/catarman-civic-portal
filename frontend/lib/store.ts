@@ -48,11 +48,17 @@ function toReport(row: ReportRow, photos: ReportPhoto[]): AdminReport {
   };
 }
 
-async function photosFor(ids: string[]): Promise<Map<string, ReportPhoto[]>> {
+/**
+ * Photo metadata for these reports. The dashboard polls the list every 15s
+ * and only shows photo counts, so the (multi-MB) image data is left out
+ * unless `withData` is set; those photos come back with an empty dataUrl.
+ */
+async function photosFor(ids: string[], withData = false): Promise<Map<string, ReportPhoto[]>> {
   const byReport = new Map<string, ReportPhoto[]>();
   if (ids.length === 0) return byReport;
   const [rows] = await db.query<PhotoRow[]>(
-    "SELECT report_id, file_name, mime_type, size_bytes, data_url FROM report_photos WHERE report_id IN (?) ORDER BY id",
+    `SELECT report_id, file_name, mime_type, size_bytes, ${withData ? "data_url" : "'' AS data_url"}
+       FROM report_photos WHERE report_id IN (?) ORDER BY id`,
     [ids]
   );
   for (const row of rows) {
@@ -96,6 +102,14 @@ export async function listReports(filters: ReportFilters = {}): Promise<AdminRep
   );
   const photos = await photosFor(rows.map((r) => r.id));
   return rows.map((row) => toReport(row, photos.get(row.id) ?? []));
+}
+
+/** One report with its photo data, for the dashboard's detail panel. */
+export async function getReport(id: string): Promise<AdminReport | null> {
+  const [rows] = await db.query<ReportRow[]>("SELECT * FROM reports WHERE id = ?", [id]);
+  if (rows.length === 0) return null;
+  const photos = await photosFor([id], true);
+  return toReport(rows[0], photos.get(id) ?? []);
 }
 
 export async function insertReport(report: AdminReport): Promise<AdminReport> {

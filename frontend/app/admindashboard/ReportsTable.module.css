@@ -323,3 +323,27 @@
     display: block;
   }
 }
+
+/* "Opens the full report" cue on cards and rows. */
+.openHint {
+  margin-left: auto;
+  color: var(--ink-subtle);
+  transition: transform 150ms ease, color 150ms ease;
+}
+
+.card:hover .openHint,
+.row:hover .openHint {
+  color: var(--civic);
+  transform: translateX(2px);
+}
+
+.openCell {
+  width: 2.5rem;
+}
+
+.card:focus-visible,
+.row:focus-visible,
+.rowSelected:focus-visible {
+  outline: 2px solid var(--civic);
+  outline-offset: -2px;
+}

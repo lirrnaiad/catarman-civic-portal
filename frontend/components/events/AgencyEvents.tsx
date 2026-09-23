@@ -131,8 +131,8 @@ export default function AgencyEvents({
   };
 
   const remove = async (id: number) => {
-    const res = await fetch(`/api/events/${id}`, { method: "DELETE" });
-    if (res.ok) {
+    const res = await fetch(`/api/events/${id}`, { method: "DELETE" }).catch(() => null);
+    if (res?.ok) {
       setEvents((prev) => prev.filter((e) => e.id !== id));
       flash("Event deleted");
     } else {

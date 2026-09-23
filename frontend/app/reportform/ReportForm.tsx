@@ -13,6 +13,7 @@ import {
 import { generateReportId } from "@/lib/id";
 import { enqueueReport, getQueuedReports } from "@/lib/offlineQueue";
 import { onFlush } from "@/lib/offlineSync";
+import { shrinkPhoto } from "@/lib/shrinkPhoto";
 import { BARANGAYS, nearestBarangay } from "@/lib/barangays";
 import { useOnline } from "@/lib/useOnline";
 import NearestCenterHint from "@/components/evacuation/NearestCenterHint";
@@ -176,13 +177,14 @@ export default function ReportForm({
 
     setStatus("submitting");
     try {
-      const files = photos.map((p) => p.file);
+      // Downscale first so both the live upload and the offline copy stay small.
+      const files = await Promise.all(photos.map((p) => shrinkPhoto(p.file)));
       const reportPhotos: ReportPhoto[] = await Promise.all(
-        photos.map(async (p) => ({
-          fileName: p.file.name,
-          mimeType: p.file.type,
-          sizeBytes: p.file.size,
-          dataUrl: await fileToDataUrl(p.file),
+        files.map(async (file) => ({
+          fileName: file.name,
+          mimeType: file.type,
+          sizeBytes: file.size,
+          dataUrl: await fileToDataUrl(file),
         }))
       );
 

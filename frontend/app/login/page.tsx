@@ -10,6 +10,7 @@ export const metadata = {
 export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const params = await searchParams;
   const error = params.error === "1";
+  const locked = params.error === "locked";
   const next = typeof params.next === "string" ? params.next : "";
   const configured = staffLoginConfigured();
 
@@ -24,6 +25,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
 
         <div className="mt-5 space-y-3">
           {error && <Alert variant="danger">Wrong password. Try again.</Alert>}
+          {locked && <Alert variant="danger">Too many wrong passwords. Wait 15 minutes, then try again.</Alert>}
           {!configured && (
             <Alert variant="warning">
               Staff login isn&apos;t set up. Add <code>ADMIN_PASSWORD</code> (and optionally <code>AGENCY_PASSWORDS</code>) to <code>frontend/.env.local</code> and restart the app.

@@ -7,9 +7,10 @@
  * The password decides the office, and the office is stamped on every
  * event server-side, so an agency can only post and edit as itself.
  *
- * The session cookie is "<role>.<agency>.<hmac>", signed with
+ * The session cookie is "<role>.<agency>.<expires>.<hmac>", signed with
  * ADMIN_SESSION_SECRET (or the passwords), so it can't be edited to claim
- * another office. Changing a password signs that office out.
+ * another office or outlive its shift. Without ADMIN_SESSION_SECRET, changing
+ * or adding any password signs every office out.
  * Web Crypto only, so this runs in both proxy.ts and server code.
  */
 
@@ -84,15 +85,18 @@ export function findAccount(password: string): Session | null {
 export async function createSessionToken(session: Session): Promise<string> {
   const key = secret();
   if (!key) throw new Error("No staff passwords are configured");
-  const body = `${session.role}.${session.agency}`;
+  const expires = Math.floor(Date.now() / 1000) + SESSION_MAX_AGE_S;
+  const body = `${session.role}.${session.agency}.${expires}`;
   return `${body}.${await hmacHex(key, body)}`;
 }
 
 export async function readSession(token: string | undefined): Promise<Session | null> {
   const key = secret();
   if (!key || !token) return null;
-  const [role, agency, sig] = token.split(".");
+  const [role, agency, expires, sig] = token.split(".");
   if ((role !== "admin" && role !== "agency") || !agency || !sig) return null;
-  const expected = await hmacHex(key, `${role}.${agency}`);
+  // Enforced server-side too, so a copied cookie stops working after the shift.
+  if (!(Number(expires) > Date.now() / 1000)) return null;
+  const expected = await hmacHex(key, `${role}.${agency}.${expires}`);
   return safeEqual(sig, expected) ? { role, agency } : null;
 }

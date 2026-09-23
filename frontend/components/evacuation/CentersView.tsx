@@ -11,6 +11,7 @@ import {
   distanceKm,
   findNearestOpenCenter,
   getCapacityStatus,
+  getStatusCounts,
   getOccupancyRatio,
   spacesLeft,
   STATUS_COLOR,
@@ -106,10 +107,7 @@ export default function CentersView({ initialCenters, now: serverNow }: { initia
 
   const nearest = origin ? findNearestOpenCenter(origin, centers) : null;
 
-  const counts = centers.reduce<Record<CapacityStatus, number>>(
-    (acc, c) => ({ ...acc, [getCapacityStatus(c)]: acc[getCapacityStatus(c)] + 1 }),
-    { open: 0, "near-full": 0, full: 0, closed: 0 }
-  );
+  const counts = getStatusCounts(centers);
 
   const sorted = [...centers]
     .map((c) => ({ c, km: origin ? distanceKm(origin, c) : null, status: getCapacityStatus(c) }))

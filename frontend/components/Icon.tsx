@@ -21,6 +21,7 @@ const ICONS = {
       <rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1" />
     </>
   ),
+  phone: <path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z" />,
   bell: <path d="M6 16v-5a6 6 0 0112 0v5l2 2H4l2-2zM10 21h4" />,
   info: (
     <>

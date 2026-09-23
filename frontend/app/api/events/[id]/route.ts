@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { deleteEvent, getEvent, updateEvent } from "@/lib/events";
 import { parseEventInput } from "@/lib/eventInput";
 import { getSession } from "@/lib/session";
+import { audit } from "@/lib/audit";
 
 export const runtime = "nodejs";
 
@@ -32,6 +33,7 @@ export async function PATCH(req: NextRequest, { params }: RouteContext<"/api/eve
   if ("error" in parsed) return NextResponse.json({ ok: false, message: parsed.error }, { status: 400 });
 
   const event = await updateEvent(id, session.agency, parsed.input);
+  audit(session, "event.update", { id, title: parsed.input.title });
   return NextResponse.json({ ok: true, event });
 }
 
@@ -46,5 +48,6 @@ export async function DELETE(_req: NextRequest, { params }: RouteContext<"/api/e
     return NextResponse.json({ ok: false, message: `Only ${existing.agency} can delete this event.` }, { status: 403 });
   }
   await deleteEvent(id, session.agency);
+  audit(session, "event.delete", { id, title: existing.title });
   return NextResponse.json({ ok: true });
 }

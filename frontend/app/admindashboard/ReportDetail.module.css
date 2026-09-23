@@ -1,0 +1,318 @@
+/* Report detail: bottom sheet on phones, right-hand drawer from 768px.
+   z-index sits above Leaflet (<=1000) and the offline banner (1090). */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.45);
+  animation: fadeIn 160ms ease-out;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 92dvh;
+  border-radius: 22px 22px 0 0;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.18);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  animation: sheetUp 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.handle {
+  width: 2.5rem;
+  height: 0.3rem;
+  margin: 0.5rem auto 0;
+  border-radius: 999px;
+  background: var(--line-strong);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.catIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.headText {
+  flex: 1;
+  min-width: 0;
+}
+
+.headText h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.headText p {
+  margin: 0.1rem 0 0;
+  font-size: 0.9rem;
+  color: var(--ink-subtle);
+}
+
+.closeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ink-subtle);
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  background: var(--surface-muted);
+  color: var(--ink);
+}
+
+.closeBtn:focus-visible,
+.secondary:focus-visible,
+.primary:focus-visible {
+  outline: 2px solid var(--civic);
+  outline-offset: 2px;
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+.status {
+  min-height: 44px;
+  min-width: 10rem;
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  padding: 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: inherit;
+}
+
+.status_new {
+  background: #fdecea;
+  color: #a03b2e;
+}
+
+.status_in_progress {
+  background: #fff3d9;
+  color: #8a6300;
+}
+
+.status_resolved {
+  background: #e6f4ea;
+  color: #226a3c;
+}
+
+.section h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-subtle);
+}
+
+.description {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+  /* Keep the citizen's line breaks; break long unspaced text instead of overflowing. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.muted {
+  margin: 0;
+  color: var(--ink-subtle);
+}
+
+.photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.5rem;
+}
+
+.photos img {
+  width: 100%;
+  max-height: 60dvh;
+  object-fit: contain;
+  border-radius: 12px;
+  background: var(--surface-muted);
+}
+
+/* A single photo gets the full width. */
+.photos img:only-child {
+  grid-column: 1 / -1;
+}
+
+.photoSkeleton {
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+}
+
+.facts {
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: var(--surface-muted);
+}
+
+.facts div {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.facts dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-subtle);
+  font-weight: 600;
+}
+
+.facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.facts a {
+  color: var(--civic);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem 0.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.secondary,
+.primary {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.secondary {
+  border: 1.5px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.secondary:hover {
+  background: var(--surface-muted);
+}
+
+.primary {
+  border: none;
+  background: var(--civic);
+  color: #fff;
+}
+
+.primary:hover {
+  background: var(--civic-hover);
+}
+
+.ref {
+  margin: 0;
+  padding: 0.4rem 1.25rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--ink-subtle);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes drawerIn {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@media (min-width: 768px) {
+  .overlay {
+    justify-content: flex-end;
+    align-items: stretch;
+  }
+
+  .panel {
+    width: min(460px, 100%);
+    max-height: none;
+    height: 100%;
+    border-radius: 0;
+    box-shadow: -8px 0 30px rgba(15, 23, 42, 0.18);
+    animation-name: drawerIn;
+  }
+
+  .handle {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .panel {
+    animation: none;
+  }
+}

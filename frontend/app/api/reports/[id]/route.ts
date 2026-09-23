@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { ReportStatus } from "@/lib/types";
-import { updateReportStatus } from "@/lib/store";
+import { getReport, updateReportStatus } from "@/lib/store";
+import { audit } from "@/lib/audit";
+import { getSession } from "@/lib/session";
 
 export const runtime = "nodejs";
 
 const VALID_STATUSES: ReportStatus[] = ["new", "in_progress", "resolved"];
+
+/** MDRRMO only (proxy.ts): one report with its photos, for the detail panel. */
+export async function GET(_req: NextRequest, { params }: RouteContext<"/api/reports/[id]">) {
+  const report = await getReport((await params).id);
+  if (!report) return NextResponse.json({ ok: false, message: "Report not found." }, { status: 404 });
+  return NextResponse.json({ ok: true, report });
+}
 
 export async function PATCH(req: NextRequest, { params }: RouteContext<"/api/reports/[id]">) {
   const { id } = await params;
@@ -23,5 +32,7 @@ export async function PATCH(req: NextRequest, { params }: RouteContext<"/api/rep
     return NextResponse.json({ ok: false, message: "Report not found." }, { status: 404 });
   }
 
+  const session = await getSession();
+  if (session) audit(session, "report.status", { id, status });
   return NextResponse.json({ ok: true, report: updated });
 }

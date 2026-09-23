@@ -21,8 +21,9 @@ interface ReportsTableProps {
   filters: Filters;
   onFiltersChange: (filters: Filters) => void;
   selectedId: string | null;
-  onSelect: (id: string) => void;
   onStatusChange: (id: string, status: ReportStatus) => void;
+  /** Opens the full report. Rows and cards call this on click or Enter. */
+  onSelect: (id: string) => void;
   /** Phones: jump from a card to that report on the map. */
   onShowOnMap?: (id: string) => void;
 }
@@ -94,6 +95,19 @@ export default function ReportsTable({
   onShowOnMap,
 }: ReportsTableProps) {
   const set = (patch: Partial<Filters>) => onFiltersChange({ ...filters, ...patch });
+  // Rows and cards are clickable; make them reachable and openable by keyboard too.
+  const openProps = (r: AdminReport) => ({
+    tabIndex: 0,
+    "aria-label": `Open ${categoryLabel(r.category)} report${r.barangay ? ` in ${r.barangay}` : ""}`,
+    onClick: () => onSelect(r.id),
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (e.target !== e.currentTarget) return; // let the status select and buttons handle their own keys
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onSelect(r.id);
+      }
+    },
+  });
 
   return (
     <div className={styles.wrap}>
@@ -140,7 +154,7 @@ export default function ReportsTable({
           <li
             key={r.id}
             className={`${styles.card} ${r.id === selectedId ? styles.cardSelected : ""}`}
-            onClick={() => onSelect(r.id)}
+            {...openProps(r)}
           >
             <div className={styles.cardTop}>
               <span
@@ -156,6 +170,7 @@ export default function ReportsTable({
                   {r.barangay ? `Brgy. ${r.barangay}` : "Barangay not given"} · {timeAgo(r.receivedAt)}
                 </span>
               </div>
+              <Icon name="chevronRight" className={`h-5 w-5 ${styles.openHint}`} />
             </div>
             <p className={r.description ? styles.cardDesc : styles.cardDescEmpty}>
               {r.description || "No description"}
@@ -197,6 +212,9 @@ export default function ReportsTable({
                 <th>Description</th>
                 <th>Received</th>
                 <th>Status</th>
+                <th>
+                  <span className="sr-only">Open</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -204,7 +222,7 @@ export default function ReportsTable({
                 <tr
                   key={r.id}
                   className={r.id === selectedId ? styles.rowSelected : styles.row}
-                  onClick={() => onSelect(r.id)}
+                  {...openProps(r)}
                 >
                   <td>{categoryLabel(r.category)}</td>
                   <td>{r.barangay || "—"}</td>
@@ -213,6 +231,9 @@ export default function ReportsTable({
                   <td suppressHydrationWarning>{timeAgo(r.receivedAt)}</td>
                   <td>
                     <StatusSelect report={r} onStatusChange={onStatusChange} />
+                  </td>
+                  <td className={styles.openCell}>
+                    <Icon name="chevronRight" className={`h-5 w-5 ${styles.openHint}`} />
                   </td>
                 </tr>
               ))}

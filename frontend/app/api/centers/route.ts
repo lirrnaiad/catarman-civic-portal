@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createCenter, listCenters, type CenterFields } from "@/lib/centers";
 import { parseCenterInput } from "@/lib/centerInput";
+import { audit } from "@/lib/audit";
+import { getSession } from "@/lib/session";
 
 export const runtime = "nodejs";
 
@@ -14,5 +16,7 @@ export async function POST(req: NextRequest) {
   const parsed = parseCenterInput(await req.json().catch(() => null), false);
   if ("error" in parsed) return NextResponse.json({ ok: false, message: parsed.error }, { status: 400 });
   const center = await createCenter(parsed.input as CenterFields);
+  const session = await getSession();
+  if (session) audit(session, "center.create", { id: center.id, name: center.name });
   return NextResponse.json({ ok: true, center }, { status: 201 });
 }

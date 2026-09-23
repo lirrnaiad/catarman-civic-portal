@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, type RefObject } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -28,7 +28,16 @@ function pinIcon(color: string, dimmed: boolean) {
   });
 }
 
-function FlyToSelected({ reports, selectedId }: { reports: AdminReport[]; selectedId: string | null }) {
+function FlyToSelected({
+  reports,
+  selectedId,
+  clickedId,
+}: {
+  reports: AdminReport[];
+  selectedId: string | null;
+  /** The report whose marker was just clicked (its popup is opening). */
+  clickedId: RefObject<string | null>;
+}) {
   const map = useMap();
   // Target waiting for the map to become visible (see below).
   const pending = useRef<[number, number] | null>(null);
@@ -48,6 +57,9 @@ function FlyToSelected({ reports, selectedId }: { reports: AdminReport[]; select
   useEffect(() => {
     const selected = reports.find((r) => r.id === selectedId);
     if (!selected) return;
+    // Selected from the list or detail panel: a popup left open from an
+    // earlier report would sit over this one. (A marker click opens its own.)
+    if (clickedId.current !== selectedId) map.closePopup();
     pending.current = [selected.location.lat, selected.location.lng];
     flyIfVisible();
     // Only re-run when the selection changes, not on every report update.
@@ -80,6 +92,8 @@ interface AdminMapProps {
   reports: AdminReport[];
   selectedId: string | null;
   onSelect: (id: string) => void;
+  /** Opens the full report (detail panel). */
+  onOpen: (id: string) => void;
   onStatusChange: (id: string, status: ReportStatus) => void;
   center?: [number, number];
 }
@@ -88,9 +102,11 @@ export default function AdminMap({
   reports,
   selectedId,
   onSelect,
+  onOpen,
   onStatusChange,
   center = [12.4994, 124.6328], // Catarman, Northern Samar — override per deployment
 }: AdminMapProps) {
+  const clickedId = useRef<string | null>(null);
   // MapContainer's `center` prop only sets the *initial* view — it won't
   // recenter on its own after that (FlyToSelected handles moving the map
   // once something is selected). So this is deliberately just `center`,
@@ -104,13 +120,18 @@ export default function AdminMap({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <ResizeWatcher />
-        <FlyToSelected reports={reports} selectedId={selectedId} />
+        <FlyToSelected reports={reports} selectedId={selectedId} clickedId={clickedId} />
         {reports.map((r) => (
           <Marker
             key={r.id}
             position={[r.location.lat, r.location.lng]}
             icon={pinIcon(CATEGORY_COLORS[r.category], r.status === "resolved")}
-            eventHandlers={{ click: () => onSelect(r.id) }}
+            eventHandlers={{
+              click: () => {
+                clickedId.current = r.id;
+                onSelect(r.id);
+              },
+            }}
           >
             <Popup>
               <div className={styles.popup}>
@@ -130,6 +151,9 @@ export default function AdminMap({
                     ))}
                   </select>
                 </label>
+                <button type="button" className={styles.popupDetails} onClick={() => onOpen(r.id)}>
+                  View details
+                </button>
               </div>
             </Popup>
           </Marker>

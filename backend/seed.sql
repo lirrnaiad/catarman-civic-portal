@@ -26,16 +26,16 @@ DELETE FROM reports;
 INSERT INTO barangays (name, lat, lng) VALUES
 ('Acacia', 12.510155, 124.640138),
 ('Aguinaldo', 12.510737, 124.629206),
-('Airport Village', 12.526883, 124.63061),
-('Bangkerohan', 12.488565, 124.665814),
-('Baybay', 12.483992, 124.662382),
+('Airport Village', 12.504089, 124.638394),
+('Bangkerohan', 12.498474, 124.64592),
+('Baybay', 12.507157, 124.643018),
 ('Bocsol', 12.485362, 124.649529),
 ('Cabayhan', 12.534424, 124.676729),
 ('Cag-abaca', 12.461152, 124.666359),
 ('Cal-igang', 12.519797, 124.650056),
 ('Calachuchi', 12.500692, 124.631931),
 ('Casoy', 12.505873, 124.636417),
-('Cawayan', 12.456169, 124.622744),
+('Cawayan', 12.507737, 124.657957),
 ('Cervantes', 12.475523, 124.608573),
 ('Cularima', 12.466048, 124.633708),
 ('Daganas', 12.520645, 124.661249),
@@ -61,7 +61,7 @@ INSERT INTO barangays (name, lat, lng) VALUES
 ('Molave', 12.500264, 124.641122),
 ('Narra', 12.49759, 124.627539),
 ('New Rizal', 12.469573, 124.619019),
-('Old Rizal', 12.502914, 124.613822),
+('Old Rizal', 12.509199, 124.5927),
 ('Paticua', 12.487617, 124.601188),
 ('Polangi', 12.3971, 124.6298),
 ('Quezon', 12.485764, 124.648535),
@@ -74,8 +74,8 @@ INSERT INTO barangays (name, lat, lng) VALUES
 ('Talisay', 12.509835, 124.626421),
 ('Tinowaran', 12.483904, 124.628772),
 ('Trangue', 12.46442, 124.608202),
-('UEP Zone I', 12.487094, 124.672487),
-('UEP Zone II', 12.542497, 124.668077),
+('UEP Zone I', 12.510594, 124.667247),
+('UEP Zone II', 12.513959, 124.661567),
 ('UEP Zone III', 12.47636, 124.659619),
 ('Washington', 12.493869, 124.643062),
 ('Yakal', 12.490191, 124.645432);
@@ -104,14 +104,14 @@ INSERT INTO evacuation_centers (name, barangay, lat, lng, capacity, current_occu
 -- Typhoon Uwan (Nov 2025), for the admin dashboard map/table demo.
 -- ---------------------------------------------------------------------------
 INSERT INTO reports (id, category, description, barangay, lat, lng, status, created_at, received_at) VALUES
-(UUID(), 'flood_landslide', 'Storm surge flooding near runway perimeter, families preemptively evacuated', 'Airport Village', 12.527883, 124.63161, 'resolved', '2025-11-08 06:40:00', '2025-11-08 06:40:00'),
-(UUID(), 'flood_landslide', 'Riverside flooding rising, road to barangay hall impassable', 'Bangkerohan', 12.487065, 124.664314, 'in_progress', '2025-11-08 07:05:00', '2025-11-08 07:05:00'),
-(UUID(), 'flood_landslide', 'Coastal flooding reported, waves reaching first row of houses', 'Baybay', 12.484792, 124.663182, 'new', '2025-11-08 07:20:00', '2025-11-08 07:20:00'),
-(UUID(), 'flood_landslide', 'Landslide risk on hillside road after continuous rain', 'Cawayan', 12.455169, 124.621744, 'in_progress', '2025-11-08 08:10:00', '2025-11-08 08:10:00'),
+(UUID(), 'flood_landslide', 'Storm surge flooding near runway perimeter, families preemptively evacuated', 'Airport Village', 12.505089, 124.639394, 'resolved', '2025-11-08 06:40:00', '2025-11-08 06:40:00'),
+(UUID(), 'flood_landslide', 'Riverside flooding rising, road to barangay hall impassable', 'Bangkerohan', 12.496974, 124.64442, 'in_progress', '2025-11-08 07:05:00', '2025-11-08 07:05:00'),
+(UUID(), 'flood_landslide', 'Coastal flooding reported, waves reaching first row of houses', 'Baybay', 12.507957, 124.643818, 'new', '2025-11-08 07:20:00', '2025-11-08 07:20:00'),
+(UUID(), 'flood_landslide', 'Landslide risk on hillside road after continuous rain', 'Cawayan', 12.506737, 124.656957, 'in_progress', '2025-11-08 08:10:00', '2025-11-08 08:10:00'),
 (UUID(), 'infrastructure', 'Downed electric post and fallen trees blocking JP Rizal highway', 'Dalakit', 12.5063, 124.62629, 'new', '2025-11-08 09:05:00', '2025-11-08 09:05:00'),
-(UUID(), 'flood_landslide', 'Flash flooding subsided, residents cleared to return', 'Old Rizal', 12.502114, 124.613022, 'resolved', '2025-11-08 05:55:00', '2025-11-08 05:55:00'),
-(UUID(), 'flood_landslide', 'Flooding around UEP dormitories, students moved to gym', 'UEP Zone I', 12.488594, 124.673987, 'new', '2025-11-08 10:30:00', '2025-11-08 10:30:00'),
-(UUID(), 'infrastructure', 'Roof damage to covered court used as staging area', 'UEP Zone II', 12.541297, 124.666877, 'in_progress', '2025-11-08 11:15:00', '2025-11-08 11:15:00');
+(UUID(), 'flood_landslide', 'Flash flooding subsided, residents cleared to return', 'Old Rizal', 12.508399, 124.5919, 'resolved', '2025-11-08 05:55:00', '2025-11-08 05:55:00'),
+(UUID(), 'flood_landslide', 'Flooding around UEP dormitories, students moved to gym', 'UEP Zone I', 12.512094, 124.668747, 'new', '2025-11-08 10:30:00', '2025-11-08 10:30:00'),
+(UUID(), 'infrastructure', 'Roof damage to covered court used as staging area', 'UEP Zone II', 12.512759, 124.660367, 'in_progress', '2025-11-08 11:15:00', '2025-11-08 11:15:00');
 
 -- ---------------------------------------------------------------------------
 -- Events: dated relative to the day you load this file (Catarman time), so

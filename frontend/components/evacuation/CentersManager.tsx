@@ -48,14 +48,19 @@ const draftFrom = (c: EvacuationCenter): Draft => ({
   lng: c.lng,
 });
 
+/** The saved center, or null if the server refused it or the connection dropped. */
 async function patch(id: number, body: Partial<EvacuationCenter>): Promise<EvacuationCenter | null> {
-  const res = await fetch(`/api/centers/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) return null;
-  return (await res.json()).center;
+  try {
+    const res = await fetch(`/api/centers/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) return null;
+    return (await res.json()).center;
+  } catch {
+    return null;
+  }
 }
 
 export default function CentersManager({ initialCenters }: { initialCenters: EvacuationCenter[] }) {
@@ -118,8 +123,8 @@ export default function CentersManager({ initialCenters }: { initialCenters: Eva
   };
 
   const remove = async (id: number) => {
-    const res = await fetch(`/api/centers/${id}`, { method: "DELETE" });
-    if (res.ok) {
+    const res = await fetch(`/api/centers/${id}`, { method: "DELETE" }).catch(() => null);
+    if (res?.ok) {
       setCenters((prev) => prev.filter((c) => c.id !== id));
       flash("Center removed");
     } else flash("Couldn't remove the center");
@@ -320,6 +325,7 @@ function ManagedCenter({
   const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [confirm, setConfirm] = useState(false);
   const timer = useRef<number | undefined>(undefined);
+  const saveSeq = useRef(0);
   const shown = useCountUp(count, 300);
 
   // Keep in sync when the sheet edits this center.
@@ -336,7 +342,10 @@ function ManagedCenter({
     setState("saving");
     window.clearTimeout(timer.current);
     timer.current = window.setTimeout(async () => {
+      const seq = ++saveSeq.current;
       const saved = await patch(center.id, { currentOccupancy: value });
+      // A newer save went out while this one was in flight: its result wins.
+      if (seq !== saveSeq.current) return;
       if (saved) {
         onSaved(saved);
         setState("saved");
