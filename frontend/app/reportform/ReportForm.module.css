@@ -192,7 +192,9 @@
   right: 0;
   bottom: var(--nav-h, 0px); /* sits on top of the bottom tab bar */
   z-index: 1050;
-  padding: 0.75rem 1rem;
+  /* Extra bottom room on phones: the nav's raised Report button pokes ~28px
+     above the tab bar and would otherwise cover this button. */
+  padding: 0.75rem 1rem 2.25rem;
   background: var(--surface);
   border-top: 1px solid var(--line);
 }
@@ -253,5 +255,11 @@
 @media (min-width: 640px) {
   .categoryGrid {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .submitBar {
+    padding: 0.75rem 1rem;
   }
 }

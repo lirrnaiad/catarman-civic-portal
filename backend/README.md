@@ -31,10 +31,13 @@ DB_PORT=3306
 DB_NAME=catarman_civic
 DB_USER=root
 DB_PASS=
+ADMIN_PASSWORD=choose-a-staff-password
 ```
 
+`ADMIN_PASSWORD` protects the admin dashboard (`/admin`). Citizens don't need it.
+
 **4. Run the app:** `cd frontend && npm install && npm run dev`, then open
-http://localhost:3000/admindashboard. The 8 Uwan-scenario seed reports should be listed.
+http://localhost:3000/admin, sign in with `ADMIN_PASSWORD`, and the 8 Uwan-scenario seed reports should be listed.
 
 ## Files
 

@@ -34,7 +34,7 @@ After that, stay on `feature/reports`. Whenever integration changes, run `git me
 
 > **The app now needs MySQL.** Reports are stored in MySQL (`lib/store.ts`). Before `npm run dev`, set up the database once by following `backend/README.md` (XAMPP works). Without it, `/admindashboard` and report submission will error.
 
-> ✅ **Already done on `integration`:** offline queue (report form saves offline, shows "Saved on this device"), reconnect sync + online/offline banner (`components/OfflineSync.tsx`, mounted in the layout), and the portal nav bar (`components/SiteNav.tsx`; the events page's own header/sidebar was removed). Don't rebuild these.
+> ✅ **Already done on `integration`:** offline queue (report form saves offline, shows "Saved on this device"), reconnect sync + online/offline banner (`components/OfflineSync.tsx`, mounted in the layout), and the portal nav bar (`components/SiteNav.tsx`; the events page's own header/sidebar was removed). Shared admin login (`ADMIN_PASSWORD` in `.env.local`; `lib/auth.ts`, `proxy.ts`, `/login`, `/admin`) guards the dashboard and the report list/status APIs; citizen submits stay public. Nav is Centers | Report (raised center, the home page `/`) | Events, with no Admin link. Don't rebuild these.
 
 ## Your to-do list (priority order)
 

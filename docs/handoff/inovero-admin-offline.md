@@ -28,7 +28,7 @@ git merge origin/integration         # pulls in the palette/icon restyle
 
 > **The app now needs MySQL.** Reports are stored in MySQL (`lib/store.ts`). Before `npm run dev`, set up the database once by following `backend/README.md` (XAMPP works). Without it, `/admindashboard` and report submission will error.
 
-> ✅ **Already done on `integration`:** offline queue (report form saves offline, shows "Saved on this device"), reconnect sync + online/offline banner (`components/OfflineSync.tsx`, mounted in the layout), and the portal nav bar (`components/SiteNav.tsx`; the events page's own header/sidebar was removed). Don't rebuild these.
+> ✅ **Already done on `integration`:** offline queue (report form saves offline, shows "Saved on this device"), reconnect sync + online/offline banner (`components/OfflineSync.tsx`, mounted in the layout), and the portal nav bar (`components/SiteNav.tsx`; the events page's own header/sidebar was removed). Shared admin login (`ADMIN_PASSWORD` in `.env.local`; `lib/auth.ts`, `proxy.ts`, `/login`, `/admin`) guards the dashboard and the report list/status APIs; citizen submits stay public. Nav is Centers | Report (raised center, the home page `/`) | Events, with no Admin link. Don't rebuild these.
 
 ## Your to-do list (priority order)
 
@@ -37,7 +37,6 @@ git merge origin/integration         # pulls in the palette/icon restyle
    - `node_modules/next/dist/docs/01-app/02-guides/offline-support.md`: the experimental `useOffline` hook.
    - Cache the app shell and `/api/reports` GETs (cache-then-network), then test with `npm run build && npm start` and devtools set to Offline.
    - `next.config.ts` is shared, so tell Fabia what needs adding.
-2. **Role-based access, FR6.** Ordonia is building shared auth for events (Story 4.1). Agree on a single login early and gate `/admindashboard` and `PATCH /api/reports/[id]` with it. Don't build a second login system.
 
 ## Rules for your branch
 
