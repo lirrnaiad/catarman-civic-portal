@@ -1,24 +1,54 @@
 /**
- * Shared LGU admin login (FR6, Story 4.1): one password for agency staff,
- * set per deployment in frontend/.env.local as ADMIN_PASSWORD. Citizens
- * never log in; only /admindashboard and the admin report APIs need it.
+ * LGU staff login (FR6, Story 4.1). Citizens never log in.
  *
- * The session cookie holds an HMAC of a fixed label, keyed by the password
- * (or ADMIN_SESSION_SECRET if set). Changing the password logs everyone out.
+ * One password per office, set per deployment in frontend/.env.local:
+ *   ADMIN_PASSWORD    MDRRMO: the reports dashboard, and events as MDRRMO
+ *   AGENCY_PASSWORDS  other offices, e.g. "MHO:pw1,MENRO:pw2" (events only)
+ * The password decides the office, and the office is stamped on every
+ * event server-side, so an agency can only post and edit as itself.
+ *
+ * The session cookie is "<role>.<agency>.<hmac>", signed with
+ * ADMIN_SESSION_SECRET (or the passwords), so it can't be edited to claim
+ * another office. Changing a password signs that office out.
  * Web Crypto only, so this runs in both proxy.ts and server code.
  */
 
 export const ADMIN_COOKIE = "civic_admin";
 export const SESSION_MAX_AGE_S = 60 * 60 * 12; // one shift
 
-const encoder = new TextEncoder();
-
-function secret(): string | null {
-  return process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD || null;
+export type Role = "admin" | "agency";
+export interface Session {
+  role: Role;
+  agency: string;
 }
 
-export function adminLoginConfigured(): boolean {
-  return Boolean(process.env.ADMIN_PASSWORD);
+const encoder = new TextEncoder();
+
+function accounts(): { password: string; session: Session }[] {
+  const list: { password: string; session: Session }[] = [];
+  if (process.env.ADMIN_PASSWORD) {
+    list.push({ password: process.env.ADMIN_PASSWORD, session: { role: "admin", agency: "MDRRMO" } });
+  }
+  for (const entry of (process.env.AGENCY_PASSWORDS ?? "").split(",")) {
+    const i = entry.indexOf(":");
+    if (i <= 0) continue;
+    const agency = entry.slice(0, i).trim().toUpperCase();
+    const password = entry.slice(i + 1).trim();
+    if (/^[A-Z0-9_]+$/.test(agency) && password) list.push({ password, session: { role: "agency", agency } });
+  }
+  return list;
+}
+
+function secret(): string | null {
+  return (
+    process.env.ADMIN_SESSION_SECRET ||
+    [process.env.ADMIN_PASSWORD, process.env.AGENCY_PASSWORDS].filter(Boolean).join("|") ||
+    null
+  );
+}
+
+export function staffLoginConfigured(): boolean {
+  return accounts().length > 0;
 }
 
 async function hmacHex(key: string, message: string): Promise<string> {
@@ -42,19 +72,27 @@ function safeEqual(a: string, b: string): boolean {
   return diff === 0;
 }
 
-export async function createSessionToken(): Promise<string> {
-  const key = secret();
-  if (!key) throw new Error("ADMIN_PASSWORD is not set");
-  return hmacHex(key, "catarman-civic-admin-v1");
+/** The office a password belongs to, or null. Checks every account so timing is uniform. */
+export function findAccount(password: string): Session | null {
+  let found: Session | null = null;
+  for (const account of accounts()) {
+    if (safeEqual(password, account.password) && !found) found = account.session;
+  }
+  return found;
 }
 
-export async function isValidSession(token: string | undefined): Promise<boolean> {
+export async function createSessionToken(session: Session): Promise<string> {
   const key = secret();
-  if (!key || !token) return false;
-  return safeEqual(token, await createSessionToken());
+  if (!key) throw new Error("No staff passwords are configured");
+  const body = `${session.role}.${session.agency}`;
+  return `${body}.${await hmacHex(key, body)}`;
 }
 
-export function passwordMatches(input: string): boolean {
-  const expected = process.env.ADMIN_PASSWORD;
-  return Boolean(expected) && safeEqual(input, expected as string);
+export async function readSession(token: string | undefined): Promise<Session | null> {
+  const key = secret();
+  if (!key || !token) return null;
+  const [role, agency, sig] = token.split(".");
+  if ((role !== "admin" && role !== "agency") || !agency || !sig) return null;
+  const expected = await hmacHex(key, `${role}.${agency}`);
+  return safeEqual(sig, expected) ? { role, agency } : null;
 }

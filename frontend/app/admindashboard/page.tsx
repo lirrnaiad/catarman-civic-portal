@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { listReports } from "@/lib/store";
 import AdminDashboard from "@/app/admindashboard/AdminDashboard";
 import { logout } from "@/app/login/actions";
@@ -16,7 +17,14 @@ export default async function AdminPage() {
     <>
       {/* Only reachable when signed in (proxy.ts). */}
       <div className="mx-auto flex w-full max-w-[1100px] items-center justify-end gap-3 px-4 pt-3 text-sm text-slate-600">
-        <span>Signed in as LGU admin</span>
+        <span>Signed in as MDRRMO</span>
+        <Link
+          href="/agency"
+          className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 font-semibold text-slate-700 hover:bg-slate-50"
+        >
+          <Icon name="calendar" className="h-4 w-4" />
+          Events
+        </Link>
         <form action={logout}>
           <button
             type="submit"

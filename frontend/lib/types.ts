@@ -112,3 +112,41 @@ export interface AdminReport extends ReportPayload {
   /** Server-side receipt time, distinct from the client's createdAt. */
   receivedAt: string;
 }
+
+// ---------------------------------------------------------------------------
+// Events (Epic 4)
+// ---------------------------------------------------------------------------
+
+export type EventCategory = "safety" | "health" | "community" | "environment" | "notice";
+
+export const EVENT_CATEGORIES: { value: EventCategory; label: string; color: string; soft: string }[] = [
+  { value: "safety", label: "Safety & DRRM", color: "#1d4ed8", soft: "#dbeafe" },
+  { value: "health", label: "Health", color: "#be123c", soft: "#ffe4e6" },
+  { value: "community", label: "Community", color: "#7c3aed", soft: "#ede9fe" },
+  { value: "environment", label: "Environment", color: "#15803d", soft: "#dcfce7" },
+  { value: "notice", label: "Notices", color: "#c2410c", soft: "#ffedd5" },
+];
+
+/** Offices that can post events. The key is what's stored in events.agency. */
+export const AGENCIES: Record<string, string> = {
+  MDRRMO: "Municipal Disaster Risk Reduction and Management Office",
+  MHO: "Municipal Health Office",
+  MENRO: "Municipal Environment and Natural Resources Office",
+  MSWDO: "Municipal Social Welfare and Development Office",
+  LGU: "Office of the Municipal Mayor",
+};
+
+export interface CivicEvent {
+  id: number;
+  title: string;
+  agency: string;
+  category: EventCategory;
+  /** ISO 8601 */
+  startsAt: string;
+  endsAt?: string;
+  location: string;
+  description: string;
+}
+
+/** What an agency submits; `agency` always comes from the session, never the client. */
+export type CivicEventInput = Omit<CivicEvent, "id" | "agency">;

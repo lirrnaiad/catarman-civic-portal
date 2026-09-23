@@ -82,6 +82,21 @@ const ICONS = {
   chevronDown: <path d="M6 9l6 6 6-6" />,
   list: <path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" />,
   map: <path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14" />,
+  bookmark: <path d="M6 4h12v17l-6-4-6 4z" />,
+  share: <path d="M12 3v12M7 8l5-5 5 5M5 13v7h14v-7" />,
+  calendarPlus: (
+    <>
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5" />
+    </>
+  ),
+  verified: (
+    <>
+      <path d="M12 2.5l2.4 1.8 3-.2.9 2.9 2.4 1.8-1 2.8 1 2.8-2.4 1.8-.9 2.9-3-.2L12 21.5l-2.4-1.8-3 .2-.9-2.9-2.4-1.8 1-2.8-1-2.8 2.4-1.8.9-2.9 3 .2z" />
+      <path d="M8.5 12l2.5 2.5 4.5-5" />
+    </>
+  ),
+  edit: <path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4" />,
 } satisfies Record<string, ReactNode>;
 
 export type IconName = keyof typeof ICONS;

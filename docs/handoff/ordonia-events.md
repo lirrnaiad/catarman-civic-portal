@@ -34,14 +34,20 @@ git merge origin/integration
 
 ## Your to-do list (priority order)
 
-1. **List and detail pages disagree.** `app/events/page.tsx` has id 1 on Sept **22**, id 2 on the **24th** and id 3 on the **26th**. `app/events/[id]/page.tsx` has id 1 on the **25th**, id 2 on the **27th** and id 3 on the **29th**, and the times and locations differ too. Clicking an event shows a different date. Move the seed events into one shared file, for example `lib/events.ts` (yours), and import it in both pages. Later, `GET /events` replaces it.
-2. **Events API, Story 4.2:** `GET/POST /api/events` and `PATCH/DELETE /api/events/[id]`, backed by the MySQL `events` table (`backend/schema.sql`: `title`, `agency`, `event_datetime`, `location`, `description`). Use the shared pool from `lib/db.ts`; `lib/store.ts` shows the query pattern. Put your queries in your own `lib/events-store.ts`, and move your seed events into `backend/seed.sql` via Fabia. In Next 16, route params are a Promise: `const { id } = await params`.
-3. **Protect event posting with the existing login (Story 4.1).** Don't build a new one: add `"/api/events/:path*"` to the `matcher` in `proxy.ts` (via Fabia) and let `GET /api/events` through like the public report POST. Staff sign in at `/login`.
-4. **Calendar month buttons** (the chevrons) don't do anything yet. Either make them work or hide them for the demo.
+> 🔁 **The Events module was rebuilt on `integration`** (Stories 4.1 + 4.2 done). Your old `app/events/page.tsx` with hardcoded dates is replaced. Everything below is yours to own and polish from here.
+>
+> - **Citizen tab** `/events`: `components/events/EventsView.tsx` ("Up next" hero with live countdown, date strip, type filters, Saved, agenda grouped by day), `EventCard.tsx`, detail page `EventDetail.tsx` (Add to calendar `.ics`, Google Maps, Share, Save).
+> - **Office manager** `/agency`: `components/events/AgencyEvents.tsx` (list, New/Edit sheet with live preview, Delete).
+> - **Data/API:** `lib/events.ts` (MySQL), `lib/eventInput.ts` (validation), `lib/eventFormat.ts` (Catarman-time formatting, `.ics`), `app/api/events/*`.
+> - **Logins:** each office has its own password (`AGENCY_PASSWORDS` in `.env.local`, e.g. `MHO:…`); an office can only post/edit/delete its own events. MDRRMO uses `ADMIN_PASSWORD`.
+
+1. **Real content.** Replace the demo events in `backend/seed.sql` (via Fabia) with real or very plausible upcoming Catarman schedules; check agency names and venues with someone local.
+2. **Try the office flow on a phone:** sign in at `/admin` with an agency password, publish an event, and confirm it shows on `/events`. Note anything confusing in the form.
+3. **Pitch closing beat:** demo "MHO posts → citizen sees it instantly with a Verified badge", the answer to scattered agency Facebook pages.
 
 ## Rules for your branch
 
-- **You own:** `app/events/` and any `lib/events.ts` or `app/api/events/` you add.
+- **You own:** `app/events/`, `app/agency/`, `components/events/`, `lib/events.ts`, `lib/eventInput.ts`, `lib/eventFormat.ts`, `app/api/events/`.
 - **Shared (ask Fabia first):** `app/globals.css` (you created the sidebar and animation CSS; it now also holds the palette), `layout.tsx`, `components/Icon.tsx`, `package.json`.
 - **Colors:** use tokens, not raw Tailwind blues or greens: `bg-civic`, `hover:bg-civic-hover`, `bg-civic-strong`, `bg-civic-soft`, `bg-civic-muted`, `text-civic`, `border-civic-line`, `text-hazard`, `text-danger`. Neutral text stays `slate-500`/`700`/`900`.
 - **Icons:** `import Icon from "@/components/Icon"`, then `<Icon name="calendar" />`. Available names are in `components/Icon.tsx`. If you need a new one, ask Fabia.

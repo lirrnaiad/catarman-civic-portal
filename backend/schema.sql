@@ -60,12 +60,21 @@ CREATE TABLE IF NOT EXISTS evacuation_centers (
     current_occupancy INT NOT NULL DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS events (
+-- Official LGU events. `agency` is stamped server-side from the signed-in
+-- agency account, so an office can only post and edit its own events.
+-- Re-running this file resets the events table (dev/demo data only).
+DROP TABLE IF EXISTS events;
+
+CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(150) NOT NULL,
-    agency VARCHAR(100) NOT NULL,
-    event_datetime DATETIME NOT NULL,
-    location VARCHAR(150),
+    agency VARCHAR(20) NOT NULL,
+    category ENUM('safety', 'health', 'community', 'environment', 'notice') NOT NULL DEFAULT 'community',
+    starts_at DATETIME NOT NULL,
+    ends_at DATETIME,
+    location VARCHAR(150) NOT NULL,
     description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_events_starts (starts_at)
 );

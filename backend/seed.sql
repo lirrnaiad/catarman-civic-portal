@@ -112,3 +112,39 @@ INSERT INTO reports (id, category, description, barangay, lat, lng, status, crea
 (UUID(), 'flood_landslide', 'Flash flooding subsided, residents cleared to return', 'Old Rizal', 12.502114, 124.613022, 'resolved', '2025-11-08 05:55:00', '2025-11-08 05:55:00'),
 (UUID(), 'flood_landslide', 'Flooding around UEP dormitories, students moved to gym', 'UEP Zone I', 12.488594, 124.673987, 'new', '2025-11-08 10:30:00', '2025-11-08 10:30:00'),
 (UUID(), 'infrastructure', 'Roof damage to covered court used as staging area', 'UEP Zone II', 12.541297, 124.666877, 'in_progress', '2025-11-08 11:15:00', '2025-11-08 11:15:00');
+
+-- ---------------------------------------------------------------------------
+-- Events: dated relative to the day you load this file (Catarman time), so
+-- the calendar always has something today, tomorrow and in the coming weeks.
+-- ---------------------------------------------------------------------------
+SET time_zone = '+08:00';
+DELETE FROM events;
+INSERT INTO events (title, agency, category, starts_at, ends_at, location, description) VALUES
+('Libreng Bakuna: Free Vaccination Day', 'MHO', 'health',
+  TIMESTAMP(CURDATE(), '08:00:00'), TIMESTAMP(CURDATE(), '20:00:00'), 'Catarman Rural Health Unit',
+  'Free flu and pneumonia vaccines for seniors, and routine immunization for children. Bring your health card or any valid ID.'),
+('Typhoon Season Preparedness Briefing', 'MDRRMO', 'safety',
+  TIMESTAMP(CURDATE() + INTERVAL 1 DAY, '09:00:00'), TIMESTAMP(CURDATE() + INTERVAL 1 DAY, '11:00:00'), 'Municipal Hall Session Hall',
+  'What to do before, during and after a typhoon: early warning signals, go-bags, and which evacuation center serves your barangay. Open to all barangay officials and residents.'),
+('Barangay Assembly: Dalakit', 'LGU', 'community',
+  TIMESTAMP(CURDATE() + INTERVAL 2 DAY, '14:00:00'), TIMESTAMP(CURDATE() + INTERVAL 2 DAY, '16:00:00'), 'Dalakit Barangay Hall',
+  'Quarterly assembly: barangay budget, drainage project updates, and an open forum for residents.'),
+('New Garbage Collection Schedule Starts', 'MENRO', 'environment',
+  TIMESTAMP(CURDATE() + INTERVAL 3 DAY, '06:00:00'), NULL, 'All barangays',
+  'Biodegradable waste: Mon/Wed/Fri. Residual waste: Tue/Sat. Please segregate and put bins out by 6:00 AM.'),
+('Municipal Earthquake & Evacuation Drill', 'MDRRMO', 'safety',
+  TIMESTAMP(CURDATE() + INTERVAL 5 DAY, '09:00:00'), TIMESTAMP(CURDATE() + INTERVAL 5 DAY, '10:30:00'), 'Catarman National High School',
+  'Nationwide Simultaneous Earthquake Drill. Schools, offices and households: duck, cover and hold at the siren, then proceed to your designated evacuation area.'),
+('Coastal Clean-up Drive', 'MENRO', 'environment',
+  TIMESTAMP(CURDATE() + INTERVAL 6 DAY, '06:00:00'), TIMESTAMP(CURDATE() + INTERVAL 6 DAY, '09:00:00'), 'Baybay Boulevard',
+  'Bring gloves and a reusable water bottle. Sacks and snacks provided. Volunteers get community service certificates.'),
+('Social Pension Payout for Seniors', 'MSWDO', 'notice',
+  TIMESTAMP(CURDATE() + INTERVAL 8 DAY, '08:00:00'), TIMESTAMP(CURDATE() + INTERVAL 8 DAY, '15:00:00'), 'Catarman Municipal Gymnasium',
+  'Quarterly social pension release for indigent senior citizens. Bring your senior citizen ID. Authorized representatives need a signed letter.'),
+('Bloodletting Program: Dugo Mo, Buhay Ko', 'MHO', 'health',
+  TIMESTAMP(CURDATE() + INTERVAL 11 DAY, '08:00:00'), TIMESTAMP(CURDATE() + INTERVAL 11 DAY, '14:00:00'), 'Catarman Cathedral Parish Hall',
+  'With the Philippine Red Cross Northern Samar Chapter. Donors must be 16 to 65 years old, at least 50 kg, and well-rested.'),
+('Catarman Town Fiesta Opening Parade', 'LGU', 'community',
+  TIMESTAMP(CURDATE() + INTERVAL 14 DAY, '07:00:00'), TIMESTAMP(CURDATE() + INTERVAL 14 DAY, '10:00:00'), 'Municipal Plaza',
+  'Street dancing and marching bands from all 55 barangays. Expect road closures along JP Rizal Street from 6:00 AM.');
+

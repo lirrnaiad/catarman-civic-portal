@@ -34,7 +34,10 @@ DB_PASS=
 ADMIN_PASSWORD=choose-a-staff-password
 ```
 
-`ADMIN_PASSWORD` protects the admin dashboard (`/admin`). Citizens don't need it.
+`ADMIN_PASSWORD` is MDRRMO's: the reports dashboard and MDRRMO events.
+`AGENCY_PASSWORDS` (e.g. `MHO:xxxx,MENRO:yyyy`) gives other offices an events
+manager where they can only post and edit their own events. Staff sign in at
+`/admin`; citizens never need a password.
 
 **4. Run the app:** `cd frontend && npm install && npm run dev`, then open
 http://localhost:3000/admin, sign in with `ADMIN_PASSWORD`, and the 8 Uwan-scenario seed reports should be listed.
@@ -42,9 +45,10 @@ http://localhost:3000/admin, sign in with `ADMIN_PASSWORD`, and the 8 Uwan-scena
 ## Files
 
 - `schema.sql`: tables `barangays`, `evacuation_centers`, `reports`, `report_photos`, `events`.
-  **Re-running it drops and recreates the two report tables** (dev/demo data only).
+  **Re-running it drops and recreates the report and events tables** (dev/demo data only).
 - `seed.sql`: 55 barangays, 8 named evacuation centers (occupancy staged for
-  the nearest-open-center demo moment), and 8 Uwan-scenario reports.
+  the nearest-open-center demo moment), 8 Uwan-scenario reports, and 9 events
+  dated relative to the day you load it (so the calendar is never empty).
   Safe to re-run: it clears the tables before inserting.
 
 ## Reports

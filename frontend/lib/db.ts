@@ -25,4 +25,12 @@ export const db =
     decimalNumbers: true,
   });
 
+if (!globalForDb.civicPool) {
+  // Make SQL NOW()/CURDATE() Catarman time too, matching how DATETIMEs are
+  // written above (the MySQL server itself often runs in UTC).
+  db.pool.on("connection", (conn) => {
+    conn.query("SET time_zone = '+08:00'");
+  });
+}
+
 if (process.env.NODE_ENV !== "production") globalForDb.civicPool = db;
