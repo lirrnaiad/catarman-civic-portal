@@ -3,15 +3,12 @@
 --
 -- Sources: Catarman's 55 barangays and poblacion/urban classification are
 -- from Wikipedia ("Catarman, Northern Samar") and PhilAtlas, cross-checked
--- Sept 2026. St. Michael Academy, Capitol Gym, Catarman National High
--- School, and Northern Samar Colleges have real pin-dropped coordinates;
--- Catarman Cathedral and PAGCOR (Brgy. Polangi) use real but
--- building-imprecise coordinates from earlier research; Municipal
--- Evacuation Center and Liga ng mga Barangay Building still reuse their
--- barangay's centroid as a placeholder. All barangay centroids (used for
--- reference/dropdowns and the Uwan-scenario report pins) are
--- deterministically jittered around the town center — swap in real GPS
--- pins post-hackathon if time allows.
+-- Sept 2026. All evacuation centers now have real pin-dropped coordinates
+-- except Catarman Cathedral and PAGCOR (Brgy. Polangi), which use real
+-- but building-imprecise coordinates from earlier research. All barangay
+-- centroids (used for reference/dropdowns and the Uwan-scenario report
+-- pins) are still deterministically jittered around the town center —
+-- swap in real GPS pins post-hackathon if time allows.
 --
 -- ⚠️ Named evacuation centers total 8 here, per tonight's-prep research.
 -- Still need to confirm with MDRRMO how PAGCOR counts against the
@@ -92,10 +89,10 @@ INSERT INTO barangays (name, lat, lng) VALUES
 -- Color thresholds assumed: <70% green, 70-99% amber, >=100% red.
 -- ---------------------------------------------------------------------------
 INSERT INTO evacuation_centers (name, barangay, lat, lng, capacity, current_occupancy) VALUES
-('Municipal Evacuation Center', 'Yakal', 12.490191, 124.645432, 800, 420),
+('Municipal Evacuation Center', 'Yakal', 12.498970963543236, 124.63810923059673, 800, 420),
 ('Catarman Cathedral', 'Jose P. Rizal', 12.498694, 124.6365, 1200, 1200),
 ('St. Michael Academy', 'Casoy', 12.498731618595883, 124.6360851456436, 600, 610),
-('Liga ng mga Barangay Building', 'Yakal', 12.4908, 124.6447, 300, 150),
+('Liga ng mga Barangay Building', 'Yakal', 12.499884470818577, 124.63719195787243, 300, 150),
 ('Capitol Gym', 'Dalakit', 12.503987369810867, 124.63346392543018, 2500, 1800),
 ('Catarman National High School', 'Dalakit', 12.503129362269114, 124.62425960592061, 1500, 1400),
 ('Northern Samar Colleges', 'Ipil-ipil', 12.498785663544979, 124.63851616235634, 1000, 300),
