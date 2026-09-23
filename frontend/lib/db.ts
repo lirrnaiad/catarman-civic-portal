@@ -23,6 +23,9 @@ export const db =
     connectionLimit: 5,
     // DECIMAL lat/lng come back as numbers instead of strings.
     decimalNumbers: true,
+    // Managed MySQL (e.g. Azure Database for MySQL) requires TLS. Node's
+    // built-in CA list covers its certificates, so no CA file is needed.
+    ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: true } : undefined,
   });
 
 if (!globalForDb.civicPool) {

@@ -15,12 +15,27 @@ function safeNext(value: FormDataEntryValue | null): string | null {
   return next.startsWith("/") && !next.startsWith("//") && !next.includes("\\") ? next : null;
 }
 
+/**
+ * The client address for rate limiting. Proxies (e.g. Azure App Service)
+ * append the address they saw, so the LAST X-Forwarded-For entry is the
+ * trustworthy one; earlier entries can be forged by the client. Azure also
+ * adds the source port ("1.2.3.4:5678"), which changes per connection, so
+ * it's stripped.
+ */
+function clientIp(forwardedFor: string | null): string {
+  const last = forwardedFor?.split(",").pop()?.trim() ?? "";
+  const bracketed = last.match(/^\[(.+)\]:\d+$/); // [IPv6]:port
+  if (bracketed) return bracketed[1];
+  const v4WithPort = last.match(/^(\d{1,3}(?:\.\d{1,3}){3}):\d+$/);
+  return v4WithPort ? v4WithPort[1] : last;
+}
+
 export async function login(formData: FormData) {
   const next = safeNext(formData.get("next"));
   const password = String(formData.get("password") ?? "");
 
   const h = await headers();
-  const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "unknown";
+  const ip = clientIp(h.get("x-forwarded-for")) || h.get("x-real-ip") || "unknown";
   const back = (error: string) => `/login?error=${error}${next ? `&next=${encodeURIComponent(next)}` : ""}`;
 
   // Checked before the password, so a locked-out guesser learns nothing.
