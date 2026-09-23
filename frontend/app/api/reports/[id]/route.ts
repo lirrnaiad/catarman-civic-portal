@@ -6,7 +6,8 @@ export const runtime = "nodejs";
 
 const VALID_STATUSES: ReportStatus[] = ["new", "in_progress", "resolved"];
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: RouteContext<"/api/reports/[id]">) {
+  const { id } = await params;
   const body = await req.json().catch(() => null);
   const status = body?.status;
 
@@ -17,7 +18,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     );
   }
 
-  const updated = await updateReportStatus(params.id, status);
+  const updated = await updateReportStatus(id, status);
   if (!updated) {
     return NextResponse.json({ ok: false, message: "Report not found." }, { status: 404 });
   }
