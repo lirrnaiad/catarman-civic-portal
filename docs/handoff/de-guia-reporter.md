@@ -36,10 +36,9 @@ After that, stay on `feature/reports`. Whenever integration changes, run `git me
 ## Your to-do list (priority order)
 
 1. **Connect the offline queue, Story 3.2 AC1. This is the pitch demo.** In `app/reportform/ReportForm.tsx:183`, when the POST fails because the device is offline (`!navigator.onLine` or a network `TypeError`), call `enqueueReport(payload)` from `@/lib/offlineQueue` and show a distinct **"Queued — will send when you're back online"** state instead of `"error"`. Queued payloads must be JSON with photos as base64 `dataUrl`s, which is what the flush in `lib/offlineSync.ts` re-POSTs.
-2. **Start the map on Catarman, not Manila.** `app/reportform/LocationPicker.tsx:43` defaults to `[14.5995, 120.9842]`. Use about `[12.4989, 124.6377]` (Catarman town proper).
-3. **Touch targets:** the remove-photo button is 22px (`ReportForm.module.css:118`). The PRD requires at least 44×44px.
-4. **Client-side photo compression** (from `reporter.md`). The limit is currently 8MB per photo (`ReportForm.tsx:24`), which is heavy on mobile data. Resize to about 1280px on a canvas at JPEG quality 0.7 before attaching.
-5. **Barangay field:** the admin filter uses `barangay`. If you add a dropdown, the canonical 55-barangay list is in `backend/seed.sql` (`barangays` table).
+2. **Touch targets:** the remove-photo button is 22px (`ReportForm.module.css:118`). The PRD requires at least 44×44px.
+3. **Client-side photo compression** (from `reporter.md`). The limit is currently 8MB per photo (`ReportForm.tsx:24`), which is heavy on mobile data. Resize to about 1280px on a canvas at JPEG quality 0.7 before attaching.
+4. **Barangay field:** the admin filter uses `barangay`. If you add a dropdown, the canonical 55-barangay list is in `backend/seed.sql` (`barangays` table).
 
 ## Rules for your branch
 

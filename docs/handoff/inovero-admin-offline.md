@@ -36,8 +36,7 @@ git merge origin/integration         # pulls in the palette/icon restyle
    - `node_modules/next/dist/docs/01-app/02-guides/offline-support.md`: the experimental `useOffline` hook.
    - Cache the app shell and `/api/reports` GETs (cache-then-network), then test with `npm run build && npm start` and devtools set to Offline.
    - `next.config.ts` is shared, so tell Fabia what needs adding.
-3. **Start the map on Catarman, not Manila.** `app/admindashboard/AdminMap.tsx:59` defaults to `[14.5995, 120.9842]`. Use about `[12.4989, 124.6377]`.
-4. **Role-based access, FR6.** Ordonia is building shared auth for events (Story 4.1). Agree on a single login early and gate `/admindashboard` and `PATCH /api/reports/[id]` with it. Don't build a second login system.
+3. **Role-based access, FR6.** Ordonia is building shared auth for events (Story 4.1). Agree on a single login early and gate `/admindashboard` and `PATCH /api/reports/[id]` with it. Don't build a second login system.
 
 ## Rules for your branch
 
