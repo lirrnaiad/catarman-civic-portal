@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -30,18 +30,38 @@ function pinIcon(color: string, dimmed: boolean) {
 
 function FlyToSelected({ reports, selectedId }: { reports: AdminReport[]; selectedId: string | null }) {
   const map = useMap();
+  // Target waiting for the map to become visible (see below).
+  const pending = useRef<[number, number] | null>(null);
+
+  // A hidden map (phone List view) measures 0x0, and Leaflet's flyTo math on
+  // a zero-size map yields NaN coordinates and throws. Only fly while
+  // visible; otherwise remember the target and fly once the map is shown.
+  const flyIfVisible = useCallback(() => {
+    if (!pending.current) return;
+    map.invalidateSize();
+    const size = map.getSize();
+    if (size.x === 0 || size.y === 0) return;
+    map.flyTo(pending.current, Math.max(map.getZoom(), 15), { duration: 0.6 });
+    pending.current = null;
+  }, [map]);
+
   useEffect(() => {
     const selected = reports.find((r) => r.id === selectedId);
-    if (selected) {
-      // The map may have just been un-hidden (phone Map/List toggle).
-      map.invalidateSize();
-      map.flyTo([selected.location.lat, selected.location.lng], Math.max(map.getZoom(), 15), {
-        duration: 0.6,
-      });
-    }
+    if (!selected) return;
+    pending.current = [selected.location.lat, selected.location.lng];
+    flyIfVisible();
     // Only re-run when the selection changes, not on every report update.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
+
+  // ResizeWatcher's invalidateSize fires "resize" when the map is un-hidden.
+  useEffect(() => {
+    map.on("resize", flyIfVisible);
+    return () => {
+      map.off("resize", flyIfVisible);
+    };
+  }, [map, flyIfVisible]);
+
   return null;
 }
 
