@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -56,17 +56,16 @@ export default function AdminMap({
   selectedId,
   onSelect,
   onStatusChange,
-  center = [14.5995, 120.9842],
+  center = [12.4994, 124.6328], // Catarman, Northern Samar — override per deployment
 }: AdminMapProps) {
-  const mapCenter = useMemo<[number, number]>(() => {
-    if (reports.length === 0) return center;
-    const withLoc = reports[0];
-    return [withLoc.location.lat, withLoc.location.lng];
-  }, [reports, center]);
+  // MapContainer's `center` prop only sets the *initial* view — it won't
+  // recenter on its own after that (FlyToSelected handles moving the map
+  // once something is selected). So this is deliberately just `center`,
+  // not derived from report data, so the map always opens on Catarman.
 
   return (
     <div className={styles.shell}>
-      <MapContainer center={mapCenter} zoom={12} scrollWheelZoom className={styles.map}>
+      <MapContainer center={center} zoom={12} scrollWheelZoom className={styles.map}>
         <TileLayer
           attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

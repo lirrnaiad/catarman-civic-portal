@@ -40,7 +40,7 @@ function ClickToPlace({ onPlace }: { onPlace: (lat: number, lng: number) => void
 export default function LocationPicker({
   value,
   onChange,
-  initialCenter = [14.5995, 120.9842], // generic PH default center — override per deployment
+  initialCenter = [12.4994, 124.6328], // Catarman, Northern Samar — override per deployment
   initialZoom = 14,
 }: LocationPickerProps) {
   const [locating, setLocating] = useState(false);
