@@ -12,17 +12,17 @@
 
 .filterInput {
   flex: 1 1 160px;
-  border: 1.5px solid #d7ddd9;
+  border: 1.5px solid var(--line-strong);
   border-radius: 8px;
   padding: 0.5rem 0.6rem;
   font-size: 0.85rem;
   font-family: inherit;
-  background: #fff;
+  background: var(--surface);
 }
 
 .tableScroll {
   overflow-x: auto;
-  border: 1px solid #e2e6e3;
+  border: 1px solid var(--line);
   border-radius: 10px;
 }
 
@@ -36,15 +36,15 @@
 .table th {
   text-align: left;
   padding: 0.6rem 0.75rem;
-  background: #f2f4f2;
-  color: #3c4a46;
+  background: var(--surface-muted);
+  color: var(--ink-muted);
   font-weight: 600;
-  border-bottom: 1px solid #e2e6e3;
+  border-bottom: 1px solid var(--line);
 }
 
 .table td {
   padding: 0.6rem 0.75rem;
-  border-bottom: 1px solid #eef0ee;
+  border-bottom: 1px solid var(--line);
   vertical-align: top;
 }
 
@@ -53,12 +53,12 @@
 }
 
 .row:hover {
-  background: #f7f8f6;
+  background: var(--surface-muted);
 }
 
 .rowSelected {
   cursor: pointer;
-  background: #eef3f2;
+  background: var(--civic-soft);
 }
 
 .descriptionCell {
@@ -70,7 +70,7 @@
 
 .empty {
   text-align: center;
-  color: #6b7a76;
+  color: var(--ink-subtle);
   padding: 1.25rem;
 }
 

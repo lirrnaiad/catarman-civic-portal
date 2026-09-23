@@ -5,7 +5,7 @@
   padding: 1rem 1rem 6rem; /* bottom padding clears the sticky submit bar */
   max-width: 640px;
   margin: 0 auto;
-  color: #16211f;
+  color: var(--ink);
   font-family: -apple-system, "Segoe UI", "Public Sans", system-ui, sans-serif;
 }
 
@@ -31,8 +31,8 @@
   width: 1.6rem;
   height: 1.6rem;
   border-radius: 50%;
-  background: #1b3a4b;
-  color: #fff;
+  background: var(--civic);
+  color: var(--surface);
   font-size: 0.85rem;
   flex-shrink: 0;
 }
@@ -48,15 +48,15 @@
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  border: 1.5px solid #d7ddd9;
+  border: 1.5px solid var(--line-strong);
   border-radius: 10px;
   padding: 0.75rem 0.9rem;
-  background: #fff;
+  background: var(--surface);
 }
 
 .categoryCardActive {
-  border-color: #1b3a4b;
-  background: #eef3f2;
+  border-color: var(--civic);
+  background: var(--civic-soft);
 }
 
 .categoryRadio {
@@ -76,17 +76,17 @@
 
 .categoryHint {
   font-size: 0.8rem;
-  color: #5c6b67;
+  color: var(--ink-subtle);
 }
 
 .mapPlaceholder {
   height: 220px;
   border-radius: 10px;
-  border: 1px solid #d7ddd9;
+  border: 1px solid var(--line-strong);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6b7a76;
+  color: var(--ink-subtle);
   font-size: 0.9rem;
 }
 
@@ -101,7 +101,7 @@
   aspect-ratio: 1 / 1;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #d7ddd9;
+  border: 1px solid var(--line-strong);
 }
 
 .photoThumb img {
@@ -119,29 +119,26 @@
   height: 22px;
   border-radius: 50%;
   border: none;
-  background: rgba(22, 33, 31, 0.75);
-  color: #fff;
-  line-height: 1;
-  font-size: 0.95rem;
+  background: rgba(15, 23, 42, 0.75);
+  color: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .addPhotoBtn {
   aspect-ratio: 1 / 1;
   border-radius: 8px;
-  border: 1.5px dashed #b9c3bf;
-  background: #f7f8f6;
+  border: 1.5px dashed var(--line-strong);
+  background: var(--surface-muted);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.2rem;
-  color: #4a5a56;
+  color: var(--ink-muted);
   font-size: 0.75rem;
-}
-
-.addPhotoIcon {
-  font-size: 1.3rem;
-  line-height: 1;
 }
 
 .hiddenInput {
@@ -151,12 +148,12 @@
 .fieldLabel {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #3c4a46;
+  color: var(--ink-muted);
 }
 
 .textarea,
 .textInput {
-  border: 1.5px solid #d7ddd9;
+  border: 1.5px solid var(--line-strong);
   border-radius: 8px;
   padding: 0.65rem 0.75rem;
   font-size: 0.95rem;
@@ -170,19 +167,19 @@
 .locateBtn:focus-visible,
 .addPhotoBtn:focus-visible,
 .submitBtn:focus-visible {
-  outline: 2px solid #1b3a4b;
+  outline: 2px solid var(--civic);
   outline-offset: 2px;
 }
 
 .hint {
   font-size: 0.8rem;
-  color: #6b7a76;
+  color: var(--ink-subtle);
   margin: 0;
 }
 
 .formError {
-  background: #fbeceb;
-  color: #b3261e;
+  background: var(--danger-soft);
+  color: var(--danger);
   border-radius: 8px;
   padding: 0.6rem 0.8rem;
   font-size: 0.88rem;
@@ -195,8 +192,8 @@
   right: 0;
   bottom: 0;
   padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
-  background: #fff;
-  border-top: 1px solid #e2e6e3;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
 }
 
 .submitBtn {
@@ -204,8 +201,8 @@
   max-width: 640px;
   margin: 0 auto;
   display: block;
-  background: #e8763a;
-  color: #fff;
+  background: var(--hazard);
+  color: var(--surface);
   font-weight: 700;
   font-size: 1rem;
   border: none;
@@ -213,14 +210,18 @@
   padding: 0.9rem;
 }
 
+.submitBtn:hover:not(:disabled) {
+  background: var(--hazard-hover);
+}
+
 .submitBtn:disabled {
   opacity: 0.6;
 }
 
 .secondaryBtn {
-  border: 1px solid #1b3a4b;
-  background: #fff;
-  color: #1b3a4b;
+  border: 1px solid var(--civic);
+  background: var(--surface);
+  color: var(--civic);
   font-weight: 600;
   border-radius: 8px;
   padding: 0.65rem 1rem;
@@ -240,12 +241,12 @@
 
 .successTitle {
   margin: 0;
-  color: #1b3a4b;
+  color: var(--civic);
 }
 
 .successBody {
   margin: 0;
-  color: #3c4a46;
+  color: var(--ink-muted);
 }
 
 @media (min-width: 640px) {

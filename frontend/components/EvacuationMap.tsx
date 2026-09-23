@@ -83,7 +83,7 @@ export default function EvacuationMap({
         <CircleMarker
           center={[userLocation.lat, userLocation.lng]}
           radius={8}
-          pathOptions={{ color: "#2563eb", fillColor: "#2563eb", fillOpacity: 0.9 }}
+          pathOptions={{ color: "#1d4ed8", fillColor: "#1d4ed8", fillOpacity: 0.9 }}
         >
           <Popup>Your location</Popup>
         </CircleMarker>
@@ -102,7 +102,7 @@ export default function EvacuationMap({
               <div className="space-y-1.5 text-sm">
                 <p className="font-semibold text-slate-900">{center.name}</p>
                 {highlighted && (
-                  <p className="text-xs font-semibold text-blue-600">
+                  <p className="text-xs font-semibold text-civic">
                     Nearest open center
                   </p>
                 )}

@@ -4,7 +4,7 @@
   height: 320px;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid #d7ddd9;
+  border: 1px solid var(--line-strong);
 }
 
 .map {
@@ -26,7 +26,7 @@
 }
 
 .popupBarangay {
-  color: #5c6b67;
+  color: var(--ink-subtle);
   font-size: 0.78rem;
 }
 
@@ -41,7 +41,7 @@
   gap: 0.2rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #3c4a46;
+  color: var(--ink-muted);
 }
 
 .selectionNote {
@@ -52,7 +52,7 @@
   border-radius: 6px;
   padding: 0.25rem 0.5rem;
   font-size: 0.72rem;
-  color: #3c4a46;
+  color: var(--ink-muted);
   z-index: 500;
 }
 

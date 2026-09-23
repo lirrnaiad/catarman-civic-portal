@@ -37,7 +37,7 @@ export default function EvacuationView() {
 
   return (
     <div className="flex flex-1 flex-col bg-slate-50 dark:bg-slate-950">
-      <header className="bg-blue-950 px-4 py-4 sm:px-6">
+      <header className="bg-civic-strong px-4 py-4 sm:px-6">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-blue-300">

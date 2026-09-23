@@ -11,6 +11,7 @@ import {
   type SubmitResult,
 } from "@/lib/types";
 import { generateReportId } from "@/lib/id";
+import Icon from "@/components/Icon";
 import styles from "./ReportForm.module.css";
 
 // react-leaflet touches window/document, so it must never render on the server.
@@ -262,7 +263,7 @@ export default function ReportForm({
                 onClick={() => removePhoto(i)}
                 aria-label={`Remove photo ${i + 1}`}
               >
-                ×
+                <Icon name="close" className="h-4 w-4" />
               </button>
             </div>
           ))}
@@ -272,7 +273,7 @@ export default function ReportForm({
               className={styles.addPhotoBtn}
               onClick={() => fileInputRef.current?.click()}
             >
-              <span className={styles.addPhotoIcon}>+</span>
+              <Icon name="plus" className="h-6 w-6" />
               <span>Add photo</span>
             </button>
           )}

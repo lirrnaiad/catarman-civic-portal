@@ -9,7 +9,7 @@
   height: 220px;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid #d7ddd9;
+  border: 1px solid var(--line-strong);
 }
 
 .map {
@@ -30,9 +30,9 @@
 }
 
 .locateBtn {
-  border: 1px solid #1b3a4b;
-  background: #ffffff;
-  color: #1b3a4b;
+  border: 1px solid var(--civic);
+  background: var(--surface);
+  color: var(--civic);
   font-size: 0.9rem;
   font-weight: 600;
   padding: 0.55rem 0.9rem;
@@ -45,17 +45,17 @@
 
 .coords {
   font-size: 0.82rem;
-  color: #4a5a56;
+  color: var(--ink-muted);
 }
 
 .error {
-  color: #b3261e;
+  color: var(--danger);
   font-size: 0.85rem;
   margin: 0;
 }
 
 .hint {
-  color: #6b7a76;
+  color: var(--ink-subtle);
   font-size: 0.8rem;
   margin: 0;
 }
