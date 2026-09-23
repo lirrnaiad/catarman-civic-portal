@@ -93,11 +93,12 @@ DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_NAME=catarman_civic
 DB_USER=root
-DB_PASS=                      ← empty for XAMPP, "civic" for the Docker option
+DB_PASS=
 ADMIN_PASSWORD=pick-an-mdrrmo-password
 AGENCY_PASSWORDS=MHO:pick-one,MENRO:pick-another
 ```
 
+- `DB_PASS`: leave it **empty** for XAMPP; write `civic` for the Docker option.
 - Use `127.0.0.1`, **not** `localhost` (see Troubleshooting).
 - These passwords are only for your laptop. `.env.local` is never committed, so **never put real passwords in `.env.example`**.
 
@@ -177,7 +178,7 @@ Tick each line. If something doesn't match **Expected**, see Part 5.
 | D3 | Enter `ADMIN_PASSWORD` | **Reports** dashboard with your reports from Part A |
 | D4 | Change a report's status → reload | New status is kept |
 | D5 | On a phone-size screen: **List / Map** switch; tap a card, then **Map** | Map opens on that report, no error |
-| D6 | **Centers** button → **+10** on a center | "Saved ✓". Open http://localhost:3000/evacuation in another tab: the number updates **by itself within 20 s** |
+| D6 | First open http://localhost:3000/evacuation in a **second tab**. Back in the dashboard: **Centers** button → **+10** on a center | "Saved ✓". In the second tab the number updates **by itself within 20 s**, no reload |
 | D7 | Flip a center's switch to **Closed** | Citizens see it as **Closed · Not accepting evacuees** (flip it back after) |
 | D8 | **Add center** → fill it in, tap the map for the pin → **Add center** | Appears on the public Centers tab; then **Remove** it |
 | D9 | **Sign out** | Back to the Report tab; `/admin` asks for the password again |
