@@ -14,6 +14,17 @@ export function getOccupancyRatio(center: EvacuationCenter): number {
   return center.currentOccupancy / center.capacity;
 }
 
+/** Tallies centers by status — surfaces the shortfall (e.g. "2 open, 6 full") at a glance. */
+export function getStatusCounts(
+  centers: EvacuationCenter[],
+): Record<CapacityStatus, number> {
+  const counts: Record<CapacityStatus, number> = { open: 0, "near-full": 0, full: 0 };
+  for (const center of centers) {
+    counts[getCapacityStatus(center)]++;
+  }
+  return counts;
+}
+
 export const STATUS_COLOR: Record<CapacityStatus, string> = {
   open: "#16a34a", // green-600
   "near-full": "#d97706", // amber-600

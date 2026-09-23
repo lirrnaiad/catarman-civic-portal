@@ -14,20 +14,29 @@ import {
 } from "@/lib/evacuation-utils";
 
 function centerIcon(color: string, highlighted: boolean) {
-  const size = highlighted ? 26 : 20;
+  // Visual dot stays compact so markers don't crowd each other at street
+  // level, but the icon's own box is padded out for a larger, easier tap
+  // target on mobile than the dot alone would give.
+  const dot = highlighted ? 22 : 16;
+  const box = highlighted ? 34 : 28;
+  const offset = (box - dot) / 2;
   return L.divIcon({
     className: "",
     html: `<span style="
-      display:block;
-      width:${size}px;height:${size}px;
-      border-radius:9999px;
-      background:${color};
-      border:${highlighted ? 3 : 2}px solid white;
-      box-shadow:0 0 0 1px rgba(0,0,0,0.35)${highlighted ? ", 0 0 0 4px rgba(37,99,235,0.5)" : ""};
-    "></span>`,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-    popupAnchor: [0, -size / 2],
+      display:block; position:relative; width:${box}px; height:${box}px;
+    ">
+      <span style="
+        position:absolute; left:${offset}px; top:${offset}px;
+        width:${dot}px; height:${dot}px;
+        border-radius:9999px;
+        background:${color};
+        border:${highlighted ? 3 : 2}px solid white;
+        box-shadow:0 1px 3px rgba(0,0,0,0.4)${highlighted ? ", 0 0 0 4px rgba(37,99,235,0.5)" : ""};
+      "></span>
+    </span>`,
+    iconSize: [box, box],
+    iconAnchor: [box / 2, box / 2],
+    popupAnchor: [0, -box / 2],
   });
 }
 
@@ -89,22 +98,38 @@ export default function EvacuationMap({
             position={[center.lat, center.lng]}
             icon={centerIcon(STATUS_COLOR[status], highlighted)}
           >
-            <Popup>
-              <div style={{ minWidth: 180 }}>
-                <strong>{center.name}</strong>
+            <Popup minWidth={200}>
+              <div className="space-y-1.5 text-sm">
+                <p className="font-semibold text-slate-900">{center.name}</p>
                 {highlighted && (
-                  <div style={{ color: "#2563eb", fontWeight: 600, fontSize: 12 }}>
+                  <p className="text-xs font-semibold text-blue-600">
                     Nearest open center
-                  </div>
+                  </p>
                 )}
-                <div>Brgy. {center.barangay}</div>
-                <div>
-                  {center.currentOccupancy.toLocaleString()} /{" "}
-                  {center.capacity.toLocaleString()} occupied (
-                  {Math.round(getOccupancyRatio(center) * 100)}%)
+                <p className="text-slate-600">Brgy. {center.barangay}</p>
+                <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                  <span
+                    aria-hidden
+                    className="inline-block h-2.5 w-2.5 rounded-full"
+                    style={{ backgroundColor: STATUS_COLOR[status] }}
+                  />
+                  <span className="font-medium" style={{ color: STATUS_COLOR[status] }}>
+                    {STATUS_LABEL[status]}
+                  </span>
+                  <span className="text-slate-500">
+                    · {center.currentOccupancy.toLocaleString()} /{" "}
+                    {center.capacity.toLocaleString()} (
+                    {Math.round(getOccupancyRatio(center) * 100)}%)
+                  </span>
                 </div>
-                <div style={{ color: STATUS_COLOR[status], fontWeight: 600 }}>
-                  {STATUS_LABEL[status]}
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${Math.min(100, Math.round(getOccupancyRatio(center) * 100))}%`,
+                      backgroundColor: STATUS_COLOR[status],
+                    }}
+                  />
                 </div>
               </div>
             </Popup>
