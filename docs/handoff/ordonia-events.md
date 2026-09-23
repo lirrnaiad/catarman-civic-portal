@@ -30,6 +30,8 @@ git merge origin/integration
 
 > **The app now needs MySQL.** Reports are stored in MySQL (`lib/store.ts`). Before `npm run dev`, set up the database once by following `backend/README.md` (XAMPP works). Without it, `/admindashboard` and report submission will error.
 
+> ✅ **Already done on `integration`:** offline queue (report form saves offline, shows "Saved on this device"), reconnect sync + online/offline banner (`components/OfflineSync.tsx`, mounted in the layout), and the portal nav bar (`components/SiteNav.tsx`; the events page's own header/sidebar was removed). Don't rebuild these.
+
 ## Your to-do list (priority order)
 
 1. **List and detail pages disagree.** `app/events/page.tsx` has id 1 on Sept **22**, id 2 on the **24th** and id 3 on the **26th**. `app/events/[id]/page.tsx` has id 1 on the **25th**, id 2 on the **27th** and id 3 on the **29th**, and the times and locations differ too. Clicking an event shows a different date. Move the seed events into one shared file, for example `lib/events.ts` (yours), and import it in both pages. Later, `GET /events` replaces it.

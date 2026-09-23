@@ -11,6 +11,8 @@ import {
   type SubmitResult,
 } from "@/lib/types";
 import { generateReportId } from "@/lib/id";
+import { enqueueReport, getQueuedReports } from "@/lib/offlineQueue";
+import { onFlush } from "@/lib/offlineSync";
 import Icon from "@/components/Icon";
 import styles from "./ReportForm.module.css";
 
@@ -46,7 +48,7 @@ export interface ReportFormProps {
   onSuccess?: (result: SubmitResult) => void;
 }
 
-type Status = "idle" | "submitting" | "success" | "error";
+type Status = "idle" | "submitting" | "success" | "queued" | "error";
 
 export default function ReportForm({
   categories = DEFAULT_CATEGORIES,
@@ -64,6 +66,17 @@ export default function ReportForm({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [lastResult, setLastResult] = useState<SubmitResult | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Once the reconnect flush has sent this report, swap "Saved on this device"
+  // for the normal confirmation so the screen matches what actually happened.
+  const queuedId = status === "queued" ? lastResult?.id : undefined;
+  useEffect(() => {
+    if (!queuedId) return;
+    return onFlush(async () => {
+      const stillQueued = (await getQueuedReports().catch(() => [])).some((r) => r.id === queuedId);
+      if (!stillQueued) setStatus("success");
+    });
+  }, [queuedId]);
 
   // Revoke object URLs on unmount / when photos change to avoid leaking memory.
   useEffect(() => {
@@ -180,7 +193,27 @@ export default function ReportForm({
         formData.append("createdAt", payload.createdAt);
         files.forEach((file) => formData.append("photos", file, file.name));
 
-        const res = await fetch(apiEndpoint, { method: "POST", body: formData });
+        // Story 3.2: no connection -> keep the report on this device. The
+        // payload is plain JSON (photos as data URLs), which is exactly what
+        // lib/offlineSync.ts re-POSTs once the browser is back online.
+        const queueForLater = async () => {
+          await enqueueReport(payload);
+          window.dispatchEvent(new CustomEvent("civic-report:queued", { detail: { id: payload.id } }));
+          setLastResult({ ok: true, id: payload.id, message: "queued" });
+          setStatus("queued");
+        };
+        if (!navigator.onLine) {
+          await queueForLater();
+          return;
+        }
+        let res: Response;
+        try {
+          res = await fetch(apiEndpoint, { method: "POST", body: formData });
+        } catch {
+          // fetch only rejects on network failure (e.g. signal dropped mid-submit).
+          await queueForLater();
+          return;
+        }
         if (!res.ok) throw new Error(`Server responded ${res.status}`);
         result = await res.json();
       }
@@ -199,6 +232,22 @@ export default function ReportForm({
       setErrorMessage(err instanceof Error ? err.message : "Something went wrong. Try again.");
     }
   };
+
+  if (status === "queued" && lastResult) {
+    return (
+      <div className={styles.successCard} role="status">
+        <h2 className={styles.successTitle}>Saved on this device</h2>
+        <p className={styles.successBody}>
+          You&apos;re offline, so your report is stored on this phone. It will be sent
+          automatically as soon as you&apos;re back online. Reference number{" "}
+          <strong>{lastResult.id}</strong>.
+        </p>
+        <button type="button" className={styles.secondaryBtn} onClick={resetForm}>
+          Submit another report
+        </button>
+      </div>
+    );
+  }
 
   if (status === "success" && lastResult) {
     return (

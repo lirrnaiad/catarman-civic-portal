@@ -33,11 +33,9 @@ Verified: `npm run build` passes, all routes return 200, and POST → PATCH stat
 ## Your integration to-do list
 
 1. **Tell each track to merge integration first** (their handoff docs say this too). The restyle touched most of their files, so merging now avoids conflicts later.
-2. **Mount the offline sync.** When Inovero sends `components/OfflineSync.tsx`, render it in `app/layout.tsx` along with an online/offline banner (`components/Alert.tsx`).
-3. **Portal nav shell.** One nav for all four modules: Evacuation `/`, Report `/reportform`, Events `/events`, Admin `/admindashboard`. The events sidebar popover (`#civic-sidebar` in `globals.css`) is the natural base. Lift it out of `app/events/page.tsx` into `components/` and put it in the layout. Rename "CivicConnect" to "Catarman Civic Portal". On mobile, keep the report action within thumb reach (PRD: one-thumb navigation).
-4. **`next.config.ts` for the PWA,** as Inovero specifies (Serwist or a manual `sw.js`, not `next-pwa`).
-5. **MySQL is the database; the API is Next.js.** `lib/db.ts` (pool) + `lib/store.ts` (queries) talk to the tables in `backend/schema.sql`. Everyone needs MySQL set up per `backend/README.md`. The demo laptop needs the DB loaded before the pitch.
-6. **When everything is stable,** open a PR from `integration` to `main`.
+2. **`next.config.ts` for the PWA,** as Inovero specifies (Serwist or a manual `sw.js`, not `next-pwa`).
+3. **MySQL is the database; the API is Next.js.** `lib/db.ts` (pool) + `lib/store.ts` (queries) talk to the tables in `backend/schema.sql`. Everyone needs MySQL set up per `backend/README.md`. The demo laptop needs the DB loaded before the pitch.
+4. **When everything is stable,** open a PR from `integration` to `main`.
 
 ## Your evacuation to-do list
 

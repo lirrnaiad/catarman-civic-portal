@@ -33,12 +33,13 @@ After that, stay on `feature/reports`. Whenever integration changes, run `git me
 
 > **The app now needs MySQL.** Reports are stored in MySQL (`lib/store.ts`). Before `npm run dev`, set up the database once by following `backend/README.md` (XAMPP works). Without it, `/admindashboard` and report submission will error.
 
+> ✅ **Already done on `integration`:** offline queue (report form saves offline, shows "Saved on this device"), reconnect sync + online/offline banner (`components/OfflineSync.tsx`, mounted in the layout), and the portal nav bar (`components/SiteNav.tsx`; the events page's own header/sidebar was removed). Don't rebuild these.
+
 ## Your to-do list (priority order)
 
-1. **Connect the offline queue, Story 3.2 AC1. This is the pitch demo.** In `app/reportform/ReportForm.tsx:183`, when the POST fails because the device is offline (`!navigator.onLine` or a network `TypeError`), call `enqueueReport(payload)` from `@/lib/offlineQueue` and show a distinct **"Queued — will send when you're back online"** state instead of `"error"`. Queued payloads must be JSON with photos as base64 `dataUrl`s, which is what the flush in `lib/offlineSync.ts` re-POSTs.
-2. **Touch targets:** the remove-photo button is 22px (`ReportForm.module.css:118`). The PRD requires at least 44×44px.
-3. **Client-side photo compression** (from `reporter.md`). The limit is currently 8MB per photo (`ReportForm.tsx:24`), which is heavy on mobile data. Resize to about 1280px on a canvas at JPEG quality 0.7 before attaching.
-4. **Barangay field:** the admin filter uses `barangay`. If you add a dropdown, the canonical 55-barangay list is in `backend/seed.sql` (`barangays` table).
+1. **Touch targets:** the remove-photo button is 22px (`ReportForm.module.css:118`). The PRD requires at least 44×44px.
+2. **Client-side photo compression** (from `reporter.md`). The limit is currently 8MB per photo (`ReportForm.tsx:24`), which is heavy on mobile data. Resize to about 1280px on a canvas at JPEG quality 0.7 before attaching.
+3. **Barangay field:** the admin filter uses `barangay`. If you add a dropdown, the canonical 55-barangay list is in `backend/seed.sql` (`barangays` table).
 
 ## Rules for your branch
 

@@ -60,6 +60,7 @@ const ICONS = {
   arrowRight: <path d="M5 12h14M13 6l6 6-6 6" />,
   arrowUpRight: <path d="M7 17L17 7M8 7h9v9" />,
   plus: <path d="M12 5v14M5 12h14" />,
+  alert: <path d="M12 3.5L21.5 20h-19L12 3.5zM12 10v4M12 17h.01" />,
 } satisfies Record<string, ReactNode>;
 
 export type IconName = keyof typeof ICONS;

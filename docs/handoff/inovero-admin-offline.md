@@ -28,15 +28,16 @@ git merge origin/integration         # pulls in the palette/icon restyle
 
 > **The app now needs MySQL.** Reports are stored in MySQL (`lib/store.ts`). Before `npm run dev`, set up the database once by following `backend/README.md` (XAMPP works). Without it, `/admindashboard` and report submission will error.
 
+> ✅ **Already done on `integration`:** offline queue (report form saves offline, shows "Saved on this device"), reconnect sync + online/offline banner (`components/OfflineSync.tsx`, mounted in the layout), and the portal nav bar (`components/SiteNav.tsx`; the events page's own header/sidebar was removed). Don't rebuild these.
+
 ## Your to-do list (priority order)
 
-1. **Start the reconnect flush, Story 3.2 AC2. This is the pitch demo.** `initOfflineSync()` in `lib/offlineSync.ts:68` exists but **nothing calls it**. Create a tiny client component, for example `components/OfflineSync.tsx` with `"use client"` and a `useEffect(() => initOfflineSync(), [])`. Tell Fabia and it gets mounted in `app/layout.tsx`, which is integration-owned, so it runs on every page. A small online/offline banner would also fit here: the PRD asks for "offline state transparency". Reuse `components/Alert.tsx`.
-2. **PWA app shell, Story 1.2.** Don't use `next-pwa`: it's webpack-only and unmaintained, and Next 16 builds with Turbopack. The bundled Next docs cover this:
+1. **PWA app shell, Story 1.2.** Don't use `next-pwa`: it's webpack-only and unmaintained, and Next 16 builds with Turbopack. The bundled Next docs cover this:
    - `node_modules/next/dist/docs/01-app/02-guides/progressive-web-apps.md`: `app/manifest.ts` and a hand-written `public/sw.js` registered from a client component. Alternatively use **Serwist**, which has a Turbopack example.
    - `node_modules/next/dist/docs/01-app/02-guides/offline-support.md`: the experimental `useOffline` hook.
    - Cache the app shell and `/api/reports` GETs (cache-then-network), then test with `npm run build && npm start` and devtools set to Offline.
    - `next.config.ts` is shared, so tell Fabia what needs adding.
-3. **Role-based access, FR6.** Ordonia is building shared auth for events (Story 4.1). Agree on a single login early and gate `/admindashboard` and `PATCH /api/reports/[id]` with it. Don't build a second login system.
+2. **Role-based access, FR6.** Ordonia is building shared auth for events (Story 4.1). Agree on a single login early and gate `/admindashboard` and `PATCH /api/reports/[id]` with it. Don't build a second login system.
 
 ## Rules for your branch
 

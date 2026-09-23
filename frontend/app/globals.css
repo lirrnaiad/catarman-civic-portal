@@ -187,93 +187,6 @@ body {
 }
 
 /* =========================================
-   SIDEBAR
-========================================= */
-
-#civic-sidebar {
-  position: fixed;
-
-  left: 0;
-  top: 0;
-
-  width: 256px;
-  height: 100vh;
-
-  margin: 0;
-  padding: 24px 20px;
-
-  border: 0;
-
-  background: var(--civic-strong);
-
-  color: white;
-
-  transform: translateX(-100%);
-  opacity: 0;
-
-  box-shadow: 20px 0 40px rgba(15, 23, 42, 0.15);
-
-  transition:
-    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 250ms ease,
-    box-shadow 380ms ease;
-
-  transition-behavior: allow-discrete;
-}
-
-/* Sidebar open */
-
-#civic-sidebar:popover-open {
-  transform: translateX(0);
-  opacity: 1;
-  box-shadow: 20px 0 45px rgba(15, 23, 42, 0.18);
-}
-
-/* Starting state when opening */
-
-@starting-style {
-  #civic-sidebar:popover-open {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-}
-
-/* Sidebar backdrop */
-
-#civic-sidebar::backdrop {
-  background: rgba(15, 23, 42, 0);
-  backdrop-filter: blur(0);
-  transition:
-    background 300ms ease,
-    backdrop-filter 300ms ease;
-}
-
-/* Smooth backdrop when open */
-
-#civic-sidebar:popover-open::backdrop {
-  background: rgba(15, 23, 42, 0.32);
-  backdrop-filter: blur(2px);
-}
-
-/* =========================================
-   SIDEBAR MENU
-========================================= */
-
-#civic-sidebar nav a,
-#civic-sidebar nav button {
-  transition:
-    background-color 250ms ease,
-    color 250ms ease,
-    transform 250ms ease,
-    box-shadow 250ms ease;
-}
-
-#civic-sidebar nav a:hover,
-#civic-sidebar nav button:hover {
-  transform: translateX(3px);
-}
-
-/* =========================================
    MOBILE / TOUCH
 ========================================= */
 
@@ -295,9 +208,5 @@ label {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-
-  #civic-sidebar {
-    transition: none !important;
   }
 }
