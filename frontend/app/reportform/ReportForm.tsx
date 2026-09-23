@@ -15,6 +15,7 @@ import { enqueueReport, getQueuedReports } from "@/lib/offlineQueue";
 import { onFlush } from "@/lib/offlineSync";
 import { BARANGAYS, nearestBarangay } from "@/lib/barangays";
 import { useOnline } from "@/lib/useOnline";
+import NearestCenterHint from "@/components/evacuation/NearestCenterHint";
 import Link from "next/link";
 import Icon, { type IconName } from "@/components/Icon";
 import styles from "./ReportForm.module.css";
@@ -326,6 +327,7 @@ export default function ReportForm({
           })}
         </div>
         {showErrors && !category && <p className={styles.fieldError}>Choose what&apos;s happening.</p>}
+        {category === "flood_landslide" && <NearestCenterHint location={location} />}
       </section>
 
       <section className={styles.section} aria-labelledby="q-where">

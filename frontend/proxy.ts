@@ -3,8 +3,10 @@ import { ADMIN_COOKIE, readSession } from "@/lib/auth";
 
 /**
  * Staff-only routes.
- * - Public: submitting reports (live + offline flush) and reading events.
- * - MDRRMO admin only: the reports dashboard and report list/status APIs.
+ * - Public: submitting reports (live + offline flush), reading events and
+ *   evacuation centers.
+ * - MDRRMO admin only: the dashboard (reports + centers manager), the report
+ *   list/status APIs, and changing evacuation centers.
  * - Any office: the events manager (/agency) and event writes. Which
  *   events an office may change is enforced in the route handlers.
  */
@@ -14,10 +16,13 @@ export async function proxy(request: NextRequest) {
   const isApi = pathname.startsWith("/api/");
 
   if (pathname === "/api/reports" && method === "POST") return NextResponse.next();
-  if (pathname.startsWith("/api/events") && method === "GET") return NextResponse.next();
+  if ((pathname.startsWith("/api/events") || pathname.startsWith("/api/centers")) && method === "GET") {
+    return NextResponse.next();
+  }
 
   const session = await readSession(request.cookies.get(ADMIN_COOKIE)?.value);
-  const adminOnly = pathname.startsWith("/admindashboard") || pathname.startsWith("/api/reports");
+  const adminOnly =
+    pathname.startsWith("/admindashboard") || pathname.startsWith("/api/reports") || pathname.startsWith("/api/centers");
 
   if (session && (!adminOnly || session.role === "admin")) return NextResponse.next();
 
@@ -36,5 +41,11 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admindashboard/:path*", "/api/reports/:path*", "/agency/:path*", "/api/events/:path*"],
+  matcher: [
+    "/admindashboard/:path*",
+    "/api/reports/:path*",
+    "/agency/:path*",
+    "/api/events/:path*",
+    "/api/centers/:path*",
+  ],
 };

@@ -50,14 +50,23 @@ CREATE TABLE report_photos (
     FOREIGN KEY (report_id) REFERENCES reports(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS evacuation_centers (
+-- Managed by MDRRMO from the admin dashboard (Centers). current_occupancy
+-- is updated live during an evacuation; updated_at tells citizens how fresh
+-- the number is. is_open = FALSE for centers not activated / closed.
+-- Re-running this file resets the table (dev/demo data only).
+DROP TABLE IF EXISTS evacuation_centers;
+
+CREATE TABLE evacuation_centers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     barangay VARCHAR(100) NOT NULL,
-    lat DECIMAL(10, 8),
-    lng DECIMAL(11, 8),
+    lat DECIMAL(10, 8) NOT NULL,
+    lng DECIMAL(11, 8) NOT NULL,
     capacity INT NOT NULL,
-    current_occupancy INT NOT NULL DEFAULT 0
+    current_occupancy INT NOT NULL DEFAULT 0,
+    is_open BOOLEAN NOT NULL DEFAULT TRUE,
+    contact VARCHAR(50),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Official LGU events. `agency` is stamped server-side from the signed-in

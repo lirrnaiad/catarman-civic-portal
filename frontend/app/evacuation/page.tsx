@@ -1,14 +1,19 @@
-import EvacuationView from "@/components/EvacuationView";
+import CentersView from "@/components/evacuation/CentersView";
 import TabTransition from "@/components/TabTransition";
+import { listCenters } from "@/lib/centers";
+
+// Occupancy changes minute to minute during an evacuation; always fresh.
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Evacuation Centers · Catarman Civic Portal",
 };
 
-export default function EvacuationPage() {
+export default async function EvacuationPage() {
+  const centers = await listCenters();
   return (
     <TabTransition>
-      <EvacuationView />
+      <CentersView initialCenters={centers} now={Date.now()} />
     </TabTransition>
   );
 }

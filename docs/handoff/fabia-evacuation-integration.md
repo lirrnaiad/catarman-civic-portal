@@ -39,7 +39,8 @@ Verified: `npm run build` passes, all routes return 200, and POST → PATCH stat
 
 ## Your evacuation to-do list
 
-- `lib/evacuation-centers.ts` is static. That's fine for the demo, and it's also what makes it work offline. Only wire `GET /evacuation_centers` if there's time.
+- **Done on `integration`:** centers live in MySQL (`lib/centers.ts`, `GET /api/centers`). The public tab (`components/evacuation/CentersView.tsx`) shows the nearest open center with walk time and Directions, polls every 20 s, and keeps the last update for offline. MDRRMO manages centers at **Dashboard → Centers** (`/admindashboard/centers`): headcount ±1/±10, open/closed switch, add/edit with a map pin, remove.
+- **Before the pitch:** set real headcounts for the demo scenario (or re-run the centers part of `seed.sql`), and add each center's contact number so citizens get a Call button.
 - Confirm whether PAGCOR counts among the "ten designated centers" before quoting a number to the DRRMO judge (`.docs/evacuation.md`).
 
 ## Palette cheat sheet (share when asked)

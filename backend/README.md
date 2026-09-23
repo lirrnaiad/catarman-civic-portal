@@ -60,6 +60,6 @@ http://localhost:3000/admin, sign in with `ADMIN_PASSWORD`, and the 8 Uwan-scena
 - The API shape lives in `frontend/lib/types.ts`. Change it through the
   integration owner, since the store and the schema must change together.
 
-**Note on `evacuation_centers`:** `lat`/`lng` are required for both the map
-plot (Story 2.1) and the nearest-center distance calc (Story 2.2), so any
-`GET /api/evacuation-centers` must return them. The columns exist and are seeded.
+**Evacuation centers** are managed by MDRRMO at `/admindashboard/centers`
+(headcount, open/closed, add/edit/remove). Citizens read them from
+`GET /api/centers`; any change shows on the public Centers tab within 20 seconds.
