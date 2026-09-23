@@ -2,6 +2,7 @@
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from "react-leaflet";
 import type { EvacuationCenter } from "@/lib/evacuation-centers";
 import { CATARMAN_TOWN_CENTER } from "@/lib/evacuation-centers";
@@ -43,8 +44,22 @@ export default function EvacuationMap({
     ? [userLocation.lat, userLocation.lng]
     : CATARMAN_TOWN_CENTER;
 
+  const mapRef = useRef<L.Map | null>(null);
+
+  useEffect(() => {
+    // Defensive re-measure: if the container's real size settles after
+    // Leaflet's initial measurement (font swap, a parent's flex layout
+    // finishing a tick late, a dynamic-import chunk arriving mid-layout),
+    // this catches Leaflet holding onto a stale, too-small size.
+    const map = mapRef.current;
+    if (!map) return;
+    const raf = requestAnimationFrame(() => map.invalidateSize());
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   return (
     <MapContainer
+      ref={mapRef}
       center={mapCenter}
       zoom={13}
       scrollWheelZoom

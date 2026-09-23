@@ -42,7 +42,15 @@ export default function EvacuationView() {
 
       <NearestCenterBanner geo={geo} nearest={nearest} />
 
-      <div className="min-h-[420px] flex-1 overflow-hidden rounded-lg border border-black/10 dark:border-white/15">
+      {/*
+        Leaflet's internal panes are absolutely-positioned, so they can't
+        establish an auto-height on a relatively-sized ancestor. This div
+        needs a genuinely *definite* height (not just flex-grow + min-height
+        chained up through body's min-h-full) or Leaflet measures a
+        near-zero box and only renders a sliver of tiles. h-[70vh] is
+        definite regardless of ancestor flex sizing.
+      */}
+      <div className="h-[70vh] min-h-[420px] overflow-hidden rounded-lg border border-black/10 dark:border-white/15">
         <EvacuationMap
           centers={EVACUATION_CENTERS}
           userLocation={userLocation}
