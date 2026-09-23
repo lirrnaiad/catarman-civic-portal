@@ -27,10 +27,13 @@ git pull
 git merge origin/integration
 ```
 
+
+> **The app now needs MySQL.** Reports are stored in MySQL (`lib/store.ts`). Before `npm run dev`, set up the database once by following `backend/README.md` (XAMPP works). Without it, `/admindashboard` and report submission will error.
+
 ## Your to-do list (priority order)
 
 1. **List and detail pages disagree.** `app/events/page.tsx` has id 1 on Sept **22**, id 2 on the **24th** and id 3 on the **26th**. `app/events/[id]/page.tsx` has id 1 on the **25th**, id 2 on the **27th** and id 3 on the **29th**, and the times and locations differ too. Clicking an event shows a different date. Move the seed events into one shared file, for example `lib/events.ts` (yours), and import it in both pages. Later, `GET /events` replaces it.
-2. **Events API, Story 4.2:** `GET/POST /api/events` and `PATCH/DELETE /api/events/[id]`, with fields `title`, `agency`, `event_datetime`, `location`, `description` (see `backend/schema.sql`). `lib/store.ts` shows the JSON-file store pattern if the PHP backend isn't ready.
+2. **Events API, Story 4.2:** `GET/POST /api/events` and `PATCH/DELETE /api/events/[id]`, backed by the MySQL `events` table (`backend/schema.sql`: `title`, `agency`, `event_datetime`, `location`, `description`). Use the shared pool from `lib/db.ts`; `lib/store.ts` shows the query pattern. Put your queries in your own `lib/events-store.ts`, and move your seed events into `backend/seed.sql` via Fabia. In Next 16, route params are a Promise: `const { id } = await params`.
 3. **Shared auth, Story 4.1.** Build it once and coordinate with Inovero, who needs it to gate the admin dashboard (FR6).
 4. **Calendar month buttons** (the chevrons) don't do anything yet. Either make them work or hide them for the demo.
 5. The sidebar's **Services / Alerts / About** buttons and the "CivicConnect" name will be replaced when Fabia builds the portal-wide nav shell. Don't spend time on them.

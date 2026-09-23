@@ -40,5 +40,3 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# runtime JSON report store (lib/store.ts)
-/data/

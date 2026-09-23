@@ -1,6 +1,6 @@
 # Handoff — Inovero (Admin Dashboard + Offline track)
 
-**Your branch:** `feature/admin-dashboard` (the admin half of `feature/report-form-admin-dashboard`)
+**Your branch:** `feature/reports`, shared with the report form work (replaces `feature/admin-dashboard` and `feature/report-form-admin-dashboard`)
 **Your stories:** 1.2 PWA App Shell · 3.2 Offline Queue (*detect reconnect + flush*) · 3.3 LGU Admin Dashboard
 
 ## What changed with the admin code
@@ -21,9 +21,12 @@ The combined report/admin branch was split so each track has its own branch. The
 
 ```bash
 git fetch origin
-git switch feature/admin-dashboard   # tracks origin/feature/admin-dashboard
+git switch feature/reports          # tracks origin/feature/reports
 git merge origin/integration         # pulls in the palette/icon restyle
 ```
+
+
+> **The app now needs MySQL.** Reports are stored in MySQL (`lib/store.ts`). Before `npm run dev`, set up the database once by following `backend/README.md` (XAMPP works). Without it, `/admindashboard` and report submission will error.
 
 ## Your to-do list (priority order)
 
@@ -42,4 +45,4 @@ git merge origin/integration         # pulls in the palette/icon restyle
 - **Shared (ask Fabia first):** `lib/types.ts`, `lib/store.ts`, `lib/offlineQueue.ts`, `app/api/reports/route.ts`, `next.config.ts`, `globals.css`, `layout.tsx`, `package.json`.
 - **Colors:** use tokens, not hex. In CSS modules: `var(--civic)`, `var(--civic-soft)`, `var(--hazard)`, `var(--danger)`, `var(--ink)`, `var(--ink-subtle)`, `var(--line)`, `var(--surface-muted)`. In Tailwind: `bg-civic`, `text-danger`, and so on. The list is at the top of `app/globals.css`.
 - **Icons:** `import Icon from "@/components/Icon"`. No emoji in buttons.
-- **Done with a chunk?** Push `feature/admin-dashboard`, then tell Fabia and it gets merged into `integration`.
+- **Done with a chunk?** Push `feature/reports`, then tell Fabia and it gets merged into `integration`.

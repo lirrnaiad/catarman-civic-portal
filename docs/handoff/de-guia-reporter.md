@@ -1,6 +1,6 @@
 # Handoff — De Guia (Reporter track)
 
-**Your branch:** `feature/reporter` (was half of `feature/report-form-admin-dashboard`)
+**Your branch:** `feature/reports`, shared with the admin dashboard work (replaces `feature/reporter` and `feature/report-form-admin-dashboard`)
 **Your stories:** 3.1 Citizen Hazard Report Form · 3.2 Offline Queue (*enqueue on submit + "Queued" state*)
 
 ## What changed with your code
@@ -14,7 +14,7 @@ Your combined branch was split in two so each track has its own branch. You're s
 | `app/api/reports/route.ts` | same path | Now shared (integration-owned) |
 | Imports `@/app/lib/…` | `@/lib/…` | Follows the move |
 | Category `garbage_segregation` | `garbage` | Matches `backend/schema.sql`. The label still reads "Garbage / Segregation" |
-| `data/reports.json` committed | not committed, `/data/` is gitignored | See the privacy note below |
+| `data/reports.json` committed | **MySQL** (`reports` + `report_photos` tables) | See the privacy note below. Setup: `backend/README.md` |
 | Colors hardcoded in the CSS modules | `var(--civic)`, `var(--hazard)`, etc. | Shared PRD palette. **Submit** is now orange-700: the old `#e8763a` failed AA contrast |
 | `×` / `+` text glyphs | `<Icon name="close" />` / `<Icon name="plus" />` | No emoji or glyph icons in buttons |
 
@@ -24,11 +24,14 @@ Your combined branch was split in two so each track has its own branch. You're s
 
 ```bash
 git fetch origin
-git switch feature/reporter          # tracks origin/feature/reporter
+git switch feature/reports          # tracks origin/feature/reports
 git merge origin/integration         # pulls in the palette/icon restyle
 ```
 
-After that, stay on `feature/reporter`. Whenever integration changes, run `git merge origin/integration` again.
+After that, stay on `feature/reports`. Whenever integration changes, run `git merge origin/integration` again.
+
+
+> **The app now needs MySQL.** Reports are stored in MySQL (`lib/store.ts`). Before `npm run dev`, set up the database once by following `backend/README.md` (XAMPP works). Without it, `/admindashboard` and report submission will error.
 
 ## Your to-do list (priority order)
 
@@ -44,4 +47,4 @@ After that, stay on `feature/reporter`. Whenever integration changes, run `git m
 - **Shared (ask Fabia first):** `lib/types.ts`, `lib/store.ts`, `lib/offlineQueue.ts`, `app/api/reports/route.ts`, `globals.css`, `layout.tsx`, `package.json`. If the contract needs a new field, say so and it will be added on `integration`. Then you run `git merge origin/integration`.
 - **Colors:** use tokens, not hex. In CSS modules: `var(--civic)`, `var(--civic-soft)`, `var(--hazard)`, `var(--danger)`, `var(--ink)`, `var(--ink-subtle)`, `var(--line)`. In Tailwind: `bg-civic`, `text-hazard`, and so on. The full list is at the top of `app/globals.css`.
 - **Icons:** `import Icon from "@/components/Icon"`, then `<Icon name="…" />`. No emoji in buttons. If you need a new icon, add it to `components/Icon.tsx` via integration.
-- **Done with a chunk?** Push `feature/reporter`, then tell Fabia and it gets merged into `integration`.
+- **Done with a chunk?** Push `feature/reports`, then tell Fabia and it gets merged into `integration`.

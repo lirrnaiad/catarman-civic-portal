@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type { AdminReport, ReportCategory, ReportPayload, ReportPhoto } from "@/lib/types";
 import { insertReport, listReports } from "@/lib/store";
 
-// Uses the Node.js filesystem via lib/store — must not run on the Edge runtime.
+// Talks to MySQL via lib/store (mysql2 needs Node) — must not run on the Edge runtime.
 export const runtime = "nodejs";
 
 const VALID_CATEGORIES: ReportCategory[] = [

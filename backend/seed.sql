@@ -1,5 +1,5 @@
 -- Catarman Civic Portal — seed data
--- Run after schema.sql: mysql -u root -p your_db_name < seed.sql
+-- Run after schema.sql: mysql -u root -p catarman_civic < seed.sql
 --
 -- Sources: Catarman's 55 barangays and poblacion/urban classification are
 -- from Wikipedia ("Catarman, Northern Samar") and PhilAtlas, cross-checked
@@ -17,7 +17,8 @@
 
 TRUNCATE TABLE barangays;
 TRUNCATE TABLE evacuation_centers;
-TRUNCATE TABLE reports;
+DELETE FROM report_photos;
+DELETE FROM reports;
 
 -- ---------------------------------------------------------------------------
 -- Barangays (55) — reference list for dropdowns / map fallback pins.
@@ -102,12 +103,12 @@ INSERT INTO evacuation_centers (name, barangay, lat, lng, capacity, current_occu
 -- Uwan-scenario reports (8) — barangays preemptively evacuated for Super
 -- Typhoon Uwan (Nov 2025), for the admin dashboard map/table demo.
 -- ---------------------------------------------------------------------------
-INSERT INTO reports (category, barangay, lat, lng, photo_url, status, created_at) VALUES
-('flood_landslide', 'Airport Village', 12.527883, 124.63161, NULL, 'resolved', '2025-11-08 06:40:00'),  -- Storm surge flooding near runway perimeter, families preemptively evacuated
-('flood_landslide', 'Bangkerohan', 12.487065, 124.664314, NULL, 'in_progress', '2025-11-08 07:05:00'),  -- Riverside flooding rising, road to barangay hall impassable
-('flood_landslide', 'Baybay', 12.484792, 124.663182, NULL, 'new', '2025-11-08 07:20:00'),  -- Coastal flooding reported, waves reaching first row of houses
-('flood_landslide', 'Cawayan', 12.455169, 124.621744, NULL, 'in_progress', '2025-11-08 08:10:00'),  -- Landslide risk on hillside road after continuous rain
-('infrastructure', 'Dalakit', 12.5063, 124.62629, NULL, 'new', '2025-11-08 09:05:00'),  -- Downed electric post and fallen trees blocking JP Rizal highway
-('flood_landslide', 'Old Rizal', 12.502114, 124.613022, NULL, 'resolved', '2025-11-08 05:55:00'),  -- Flash flooding subsided, residents cleared to return
-('flood_landslide', 'UEP Zone I', 12.488594, 124.673987, NULL, 'new', '2025-11-08 10:30:00'),  -- Flooding around UEP dormitories, students moved to gym
-('infrastructure', 'UEP Zone II', 12.541297, 124.666877, NULL, 'in_progress', '2025-11-08 11:15:00');  -- Roof damage to covered court used as staging area
+INSERT INTO reports (id, category, description, barangay, lat, lng, status, created_at, received_at) VALUES
+(UUID(), 'flood_landslide', 'Storm surge flooding near runway perimeter, families preemptively evacuated', 'Airport Village', 12.527883, 124.63161, 'resolved', '2025-11-08 06:40:00', '2025-11-08 06:40:00'),
+(UUID(), 'flood_landslide', 'Riverside flooding rising, road to barangay hall impassable', 'Bangkerohan', 12.487065, 124.664314, 'in_progress', '2025-11-08 07:05:00', '2025-11-08 07:05:00'),
+(UUID(), 'flood_landslide', 'Coastal flooding reported, waves reaching first row of houses', 'Baybay', 12.484792, 124.663182, 'new', '2025-11-08 07:20:00', '2025-11-08 07:20:00'),
+(UUID(), 'flood_landslide', 'Landslide risk on hillside road after continuous rain', 'Cawayan', 12.455169, 124.621744, 'in_progress', '2025-11-08 08:10:00', '2025-11-08 08:10:00'),
+(UUID(), 'infrastructure', 'Downed electric post and fallen trees blocking JP Rizal highway', 'Dalakit', 12.5063, 124.62629, 'new', '2025-11-08 09:05:00', '2025-11-08 09:05:00'),
+(UUID(), 'flood_landslide', 'Flash flooding subsided, residents cleared to return', 'Old Rizal', 12.502114, 124.613022, 'resolved', '2025-11-08 05:55:00', '2025-11-08 05:55:00'),
+(UUID(), 'flood_landslide', 'Flooding around UEP dormitories, students moved to gym', 'UEP Zone I', 12.488594, 124.673987, 'new', '2025-11-08 10:30:00', '2025-11-08 10:30:00'),
+(UUID(), 'infrastructure', 'Roof damage to covered court used as staging area', 'UEP Zone II', 12.541297, 124.666877, 'in_progress', '2025-11-08 11:15:00', '2025-11-08 11:15:00');

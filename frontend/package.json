@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "leaflet": "^1.9.4",
+    "mysql2": "^3.24.4",
     "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
