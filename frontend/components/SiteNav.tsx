@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import ConnectionPill from "@/components/ConnectionPill";
 import Icon, { type IconName } from "@/components/Icon";
 
 type Tab = { href: string; label: string; icon: IconName };
@@ -78,6 +79,10 @@ export default function SiteNav() {
         </Link>
 
         <SideTab tab={RIGHT} pathname={pathname} />
+
+        <span className="ml-2 hidden lg:inline-flex">
+          <ConnectionPill />
+        </span>
       </div>
     </nav>
   );

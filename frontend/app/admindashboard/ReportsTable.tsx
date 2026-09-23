@@ -105,7 +105,8 @@ export default function ReportsTable({
                 <td>{categoryLabel(r.category)}</td>
                 <td>{r.barangay || "—"}</td>
                 <td className={styles.descriptionCell}>{r.description}</td>
-                <td>{timeAgo(r.receivedAt)}</td>
+                {/* Relative to "now", so server and browser can differ by a minute. */}
+                <td suppressHydrationWarning>{timeAgo(r.receivedAt)}</td>
                 <td onClick={(e) => e.stopPropagation()}>
                   <select
                     className={`${styles.statusSelect} ${styles[`status_${r.status}`]}`}

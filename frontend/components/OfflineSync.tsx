@@ -1,18 +1,10 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import Alert from "@/components/Alert";
 import { getQueuedCount } from "@/lib/offlineQueue";
 import { initOfflineSync, onFlush } from "@/lib/offlineSync";
-
-function subscribeOnline(callback: () => void) {
-  window.addEventListener("online", callback);
-  window.addEventListener("offline", callback);
-  return () => {
-    window.removeEventListener("online", callback);
-    window.removeEventListener("offline", callback);
-  };
-}
+import { useOnline } from "@/lib/useOnline";
 
 const plural = (n: number) => (n === 1 ? "1 report" : `${n} reports`);
 
@@ -22,8 +14,7 @@ const plural = (n: number) => (n === 1 ? "1 report" : `${n} reports`);
  * offline notice, saved-report count, and a confirmation once they're sent.
  */
 export default function OfflineSync() {
-  // Server snapshot is "online" so the first client render matches the HTML.
-  const online = useSyncExternalStore(subscribeOnline, () => navigator.onLine, () => true);
+  const online = useOnline();
   const [queued, setQueued] = useState(0);
   const [justSent, setJustSent] = useState(0);
 
@@ -69,5 +60,5 @@ export default function OfflineSync() {
   }
 
   if (!banner) return null;
-  return <div className="sticky top-0 z-[1090] lg:top-14 mx-auto w-full max-w-5xl px-4 pt-3">{banner}</div>;
+  return <div className="sticky top-14 z-[1090] lg:top-16 mx-auto w-full max-w-5xl px-4 pt-3">{banner}</div>;
 }
