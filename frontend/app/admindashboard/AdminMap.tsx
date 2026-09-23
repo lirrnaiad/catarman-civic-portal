@@ -33,6 +33,8 @@ function FlyToSelected({ reports, selectedId }: { reports: AdminReport[]; select
   useEffect(() => {
     const selected = reports.find((r) => r.id === selectedId);
     if (selected) {
+      // The map may have just been un-hidden (phone Map/List toggle).
+      map.invalidateSize();
       map.flyTo([selected.location.lat, selected.location.lng], Math.max(map.getZoom(), 15), {
         duration: 0.6,
       });
@@ -40,6 +42,17 @@ function FlyToSelected({ reports, selectedId }: { reports: AdminReport[]; select
     // Only re-run when the selection changes, not on every report update.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
+  return null;
+}
+
+/** Leaflet caches its size; re-measure when the box changes (e.g. List -> Map on phones). */
+function ResizeWatcher() {
+  const map = useMap();
+  useEffect(() => {
+    const observer = new ResizeObserver(() => map.invalidateSize());
+    observer.observe(map.getContainer());
+    return () => observer.disconnect();
+  }, [map]);
   return null;
 }
 
@@ -70,6 +83,7 @@ export default function AdminMap({
           attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <ResizeWatcher />
         <FlyToSelected reports={reports} selectedId={selectedId} />
         {reports.map((r) => (
           <Marker

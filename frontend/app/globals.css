@@ -203,6 +203,98 @@ body {
 }
 
 /* =========================================
+   SKELETON LOADING
+   Shimmering placeholder while maps and lists load.
+========================================= */
+
+.skeleton {
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: civicShimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes civicShimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* =========================================
+   TAB TRANSITIONS (components/TabTransition + SiteNav)
+   Short directional slide between Centers / Report / Events. The top bar
+   and bottom nav are anchored so only the content moves.
+========================================= */
+
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(site-topbar),
+::view-transition-group(site-nav) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(site-topbar),
+::view-transition-old(site-nav) {
+  display: none;
+}
+
+::view-transition-new(site-topbar),
+::view-transition-new(site-nav) {
+  animation: none;
+}
+
+::view-transition-old(.tab-forward) {
+  --tab-offset: -48px;
+  animation:
+    120ms ease-in both civicTabFade reverse,
+    260ms cubic-bezier(0.22, 1, 0.36, 1) both civicTabSlide reverse;
+}
+
+::view-transition-new(.tab-forward) {
+  --tab-offset: 48px;
+  animation:
+    180ms ease-out 80ms both civicTabFade,
+    260ms cubic-bezier(0.22, 1, 0.36, 1) both civicTabSlide;
+}
+
+::view-transition-old(.tab-back) {
+  --tab-offset: 48px;
+  animation:
+    120ms ease-in both civicTabFade reverse,
+    260ms cubic-bezier(0.22, 1, 0.36, 1) both civicTabSlide reverse;
+}
+
+::view-transition-new(.tab-back) {
+  --tab-offset: -48px;
+  animation:
+    180ms ease-out 80ms both civicTabFade,
+    260ms cubic-bezier(0.22, 1, 0.36, 1) both civicTabSlide;
+}
+
+@keyframes civicTabFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes civicTabSlide {
+  from {
+    translate: var(--tab-offset);
+  }
+  to {
+    translate: 0;
+  }
+}
+
+/* =========================================
    MOBILE / TOUCH
 ========================================= */
 
@@ -217,6 +309,13 @@ label {
 ========================================= */
 
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+
   *,
   *::before,
   *::after {

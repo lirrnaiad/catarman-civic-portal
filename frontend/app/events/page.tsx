@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import Icon from "@/components/Icon";
+import TabTransition from "@/components/TabTransition";
 
 const events = [
   {
@@ -80,6 +81,7 @@ export default function EventsPage() {
   );
 
   return (
+    <TabTransition>
     <main className="min-h-screen bg-background text-slate-900">
 
 
@@ -638,5 +640,6 @@ export default function EventsPage() {
       </div>
 
     </main>
+    </TabTransition>
   );
 }

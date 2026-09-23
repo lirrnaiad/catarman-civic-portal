@@ -13,14 +13,27 @@ import {
 import { generateReportId } from "@/lib/id";
 import { enqueueReport, getQueuedReports } from "@/lib/offlineQueue";
 import { onFlush } from "@/lib/offlineSync";
-import Icon from "@/components/Icon";
+import { BARANGAYS, nearestBarangay } from "@/lib/barangays";
+import { useOnline } from "@/lib/useOnline";
+import Link from "next/link";
+import Icon, { type IconName } from "@/components/Icon";
 import styles from "./ReportForm.module.css";
 
 // react-leaflet touches window/document, so it must never render on the server.
 const LocationPicker = dynamic(() => import("./LocationPicker"), {
   ssr: false,
-  loading: () => <div className={styles.mapPlaceholder}>Loading map…</div>,
+  loading: () => <div className={`${styles.mapPlaceholder} skeleton`} aria-label="Loading map" />,
 });
+
+const CATEGORY_ICON: Record<string, IconName> = {
+  flood_landslide: "waves",
+  garbage: "trash",
+  crime: "siren",
+  infrastructure: "wrench",
+};
+
+/** Short, readable reference for the confirmation screen. */
+const shortRef = (id: string) => id.replace(/-/g, "").slice(0, 8).toUpperCase();
 
 const MAX_PHOTOS = 5;
 const MAX_PHOTO_MB = 8;
@@ -60,6 +73,10 @@ export default function ReportForm({
   const [category, setCategory] = useState<string>("");
   const [description, setDescription] = useState("");
   const [contact, setContact] = useState("");
+  const [barangay, setBarangay] = useState("");
+  const [barangayTouched, setBarangayTouched] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
+  const online = useOnline();
   const [location, setLocation] = useState<GeoLocation | null>(null);
   const [photos, setPhotos] = useState<PhotoDraft[]>([]);
   const [status, setStatus] = useState<Status>("idle");
@@ -77,6 +94,11 @@ export default function ReportForm({
       if (!stillQueued) setStatus("success");
     });
   }, [queuedId]);
+
+  // Suggest the barangay nearest the pin until the reporter picks one themselves.
+  // (Adjusting state during render instead of in an effect avoids a second pass.)
+  const suggested = location ? nearestBarangay(location.lat, location.lng) : "";
+  if (!barangayTouched && suggested && barangay !== suggested) setBarangay(suggested);
 
   // Revoke object URLs on unmount / when photos change to avoid leaking memory.
   useEffect(() => {
@@ -130,6 +152,9 @@ export default function ReportForm({
     setCategory("");
     setDescription("");
     setContact("");
+    setBarangay("");
+    setBarangayTouched(false);
+    setShowErrors(false);
     setLocation(null);
     setPhotos([]);
     setStatus("idle");
@@ -141,16 +166,10 @@ export default function ReportForm({
     e.preventDefault();
     setErrorMessage(null);
 
-    if (!category) {
-      setErrorMessage("Choose a category.");
-      return;
-    }
-    if (!location) {
-      setErrorMessage("Set the location on the map.");
-      return;
-    }
-    if (description.trim().length < 10) {
-      setErrorMessage("Add a few more words describing what's happening.");
+    // Only category and location are required: a report should take two taps.
+    if (!category || !location) {
+      setShowErrors(true);
+      setErrorMessage(!category ? "Choose what's happening." : "Set the location on the map.");
       return;
     }
 
@@ -173,6 +192,7 @@ export default function ReportForm({
         location,
         photos: reportPhotos,
         reporterContact: contact.trim() || undefined,
+        barangay: barangay || undefined,
         createdAt: new Date().toISOString(),
       };
 
@@ -190,6 +210,7 @@ export default function ReportForm({
           formData.append("accuracy", String(payload.location.accuracy));
         }
         if (payload.reporterContact) formData.append("reporterContact", payload.reporterContact);
+        if (payload.barangay) formData.append("barangay", payload.barangay);
         formData.append("createdAt", payload.createdAt);
         files.forEach((file) => formData.append("photos", file, file.name));
 
@@ -233,100 +254,121 @@ export default function ReportForm({
     }
   };
 
-  if (status === "queued" && lastResult) {
+  if ((status === "queued" || status === "success") && lastResult) {
+    const queued = status === "queued";
     return (
-      <div className={styles.successCard} role="status">
-        <h2 className={styles.successTitle}>Saved on this device</h2>
-        <p className={styles.successBody}>
-          You&apos;re offline, so your report is stored on this phone. It will be sent
-          automatically as soon as you&apos;re back online. Reference number{" "}
-          <strong>{lastResult.id}</strong>.
+      <div className={`${styles.doneCard} ${queued ? styles.doneQueued : styles.doneSent}`} role="status" key={status}>
+        <div className={styles.doneIcon} aria-hidden>
+          {queued ? (
+            <Icon name="clock" className="h-9 w-9" />
+          ) : (
+            <svg viewBox="0 0 52 52" className={styles.checkSvg}>
+              <circle cx="26" cy="26" r="23" className={styles.checkCircle} />
+              <path d="M15 27l7 7 15-16" className={styles.checkMark} />
+            </svg>
+          )}
+        </div>
+        <h2 className={styles.doneTitle}>{queued ? "Saved on this device" : "Sent to MDRRMO"}</h2>
+        <p className={styles.doneBody}>
+          {queued
+            ? "No signal right now. Your report will send automatically as soon as you're back online, even if you close this page."
+            : "Thank you. Municipal responders can now see your report on their dashboard."}
         </p>
-        <button type="button" className={styles.secondaryBtn} onClick={resetForm}>
-          Submit another report
-        </button>
+        <p className={styles.doneRef}>
+          Reference <strong>#{shortRef(lastResult.id)}</strong>
+        </p>
+        <div className={styles.doneActions}>
+          <button type="button" className={styles.primaryBtn} onClick={resetForm}>
+            Report another issue
+          </button>
+          <Link href="/evacuation" className={styles.secondaryBtn}>
+            <Icon name="home" className="h-4 w-4" />
+            Nearest evacuation center
+          </Link>
+        </div>
       </div>
     );
   }
 
-  if (status === "success" && lastResult) {
-    return (
-      <div className={styles.successCard}>
-        <h2 className={styles.successTitle}>Report submitted</h2>
-        <p className={styles.successBody}>
-          Reference number <strong>{lastResult.id}</strong>. Keep this if you need to follow up.
-        </p>
-        <button type="button" className={styles.secondaryBtn} onClick={resetForm}>
-          Submit another report
-        </button>
-      </div>
-    );
-  }
+  const detailsFilled = [description.trim(), contact.trim()].filter(Boolean).length + (barangayTouched ? 1 : 0);
 
   return (
     <form className={styles.form} onSubmit={handleSubmit} noValidate>
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>
-          <span className={styles.stepNumber}>1</span> What's the issue?
+      <section className={styles.section} aria-labelledby="q-what">
+        <h2 id="q-what" className={styles.sectionTitle}>
+          What&apos;s happening?
         </h2>
-        <div className={styles.categoryGrid}>
-          {categories.map((opt) => (
-            <label
-              key={opt.value}
-              className={`${styles.categoryCard} ${category === opt.value ? styles.categoryCardActive : ""}`}
-            >
-              <input
-                type="radio"
-                name="category"
-                value={opt.value}
-                checked={category === opt.value}
-                onChange={() => setCategory(opt.value)}
-                className={styles.categoryRadio}
-              />
-              <span className={styles.categoryLabel}>{opt.label}</span>
-              <span className={styles.categoryHint}>{opt.hint}</span>
-            </label>
-          ))}
+        <div className={styles.categoryGrid} role="radiogroup" aria-labelledby="q-what">
+          {categories.map((opt) => {
+            const active = category === opt.value;
+            return (
+              <label key={opt.value} className={`${styles.categoryCard} ${active ? styles.categoryCardActive : ""}`}>
+                <input
+                  type="radio"
+                  name="category"
+                  value={opt.value}
+                  checked={active}
+                  onChange={() => setCategory(opt.value)}
+                  className={styles.categoryRadio}
+                />
+                <span className={styles.categoryIcon} aria-hidden>
+                  <Icon name={CATEGORY_ICON[opt.value] ?? "alert"} className="h-7 w-7" />
+                </span>
+                <span className={styles.categoryLabel}>{opt.label}</span>
+                <span className={styles.categoryHint}>{opt.hint}</span>
+                {active && (
+                  <span className={styles.categoryCheck} aria-hidden>
+                    <Icon name="check" className="h-3.5 w-3.5" />
+                  </span>
+                )}
+              </label>
+            );
+          })}
         </div>
+        {showErrors && !category && <p className={styles.fieldError}>Choose what&apos;s happening.</p>}
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>
-          <span className={styles.stepNumber}>2</span> Where is it?
+      <section className={styles.section} aria-labelledby="q-where">
+        <h2 id="q-where" className={styles.sectionTitle}>
+          Where is it?
         </h2>
         <LocationPicker value={location} onChange={setLocation} initialCenter={initialMapCenter} />
+        {showErrors && !location && <p className={styles.fieldError}>Set the location on the map.</p>}
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>
-          <span className={styles.stepNumber}>3</span> Add photos
+      <section className={styles.section} aria-labelledby="q-photos">
+        <h2 id="q-photos" className={styles.sectionTitle}>
+          Photos <span className={styles.optional}>optional</span>
         </h2>
-        <div className={styles.photoGrid}>
-          {photos.map((p, i) => (
-            <div key={p.previewUrl} className={styles.photoThumb}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={p.previewUrl} alt={`Attached photo ${i + 1}`} />
-              <button
-                type="button"
-                className={styles.removePhotoBtn}
-                onClick={() => removePhoto(i)}
-                aria-label={`Remove photo ${i + 1}`}
-              >
-                <Icon name="close" className="h-4 w-4" />
-              </button>
-            </div>
-          ))}
-          {photos.length < MAX_PHOTOS && (
-            <button
-              type="button"
-              className={styles.addPhotoBtn}
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <Icon name="plus" className="h-6 w-6" />
-              <span>Add photo</span>
-            </button>
-          )}
-        </div>
+        {photos.length < MAX_PHOTOS && (
+          <button type="button" className={styles.dropzone} onClick={() => fileInputRef.current?.click()}>
+            <span className={styles.dropzoneIcon} aria-hidden>
+              <Icon name="camera" className="h-7 w-7" />
+            </span>
+            <span className={styles.dropzoneTitle}>{photos.length ? "Add another photo" : "Take or add photos"}</span>
+            <span className={styles.dropzoneHint}>
+              Up to {MAX_PHOTOS} photos · helps responders see the situation
+            </span>
+          </button>
+        )}
+        {photos.length > 0 && (
+          <div className={styles.photoGrid}>
+            {photos.map((p, i) => (
+              <div key={p.previewUrl} className={styles.photoThumb}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.previewUrl} alt={`Attached photo ${i + 1}`} />
+                <button
+                  type="button"
+                  className={styles.removePhotoBtn}
+                  onClick={() => removePhoto(i)}
+                  aria-label={`Remove photo ${i + 1}`}
+                >
+                  <Icon name="close" className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
         <input
           ref={fileInputRef}
           type="file"
@@ -339,43 +381,78 @@ export default function ReportForm({
             e.target.value = "";
           }}
         />
-        <p className={styles.hint}>Up to {MAX_PHOTOS} photos, {MAX_PHOTO_MB}MB each.</p>
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>
-          <span className={styles.stepNumber}>4</span> Details
-        </h2>
-        <label className={styles.fieldLabel} htmlFor="description">
-          Description
-        </label>
-        <textarea
-          id="description"
-          className={styles.textarea}
-          rows={4}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe what you're seeing, since when, and anything responders should know."
-        />
+      <details className={styles.details}>
+        <summary className={styles.detailsSummary}>
+          <span>
+            Add details <span className={styles.optional}>optional</span>
+          </span>
+          {detailsFilled > 0 && <span className={styles.detailsCount}>{detailsFilled} added</span>}
+          <Icon name="chevronDown" className={`h-5 w-5 ${styles.detailsChevron}`} />
+        </summary>
+        <div className={styles.detailsBody}>
+          <label className={styles.fieldLabel} htmlFor="description">
+            What are you seeing?
+          </label>
+          <textarea
+            id="description"
+            className={styles.textarea}
+            rows={3}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="e.g. Water is knee-deep and rising near the bridge"
+          />
 
-        <label className={styles.fieldLabel} htmlFor="contact">
-          Contact (optional)
-        </label>
-        <input
-          id="contact"
-          type="text"
-          className={styles.textInput}
-          value={contact}
-          onChange={(e) => setContact(e.target.value)}
-          placeholder="Phone or email, if you'd like an update"
-        />
-      </section>
+          <label className={styles.fieldLabel} htmlFor="barangay">
+            Barangay
+          </label>
+          <select
+            id="barangay"
+            className={styles.textInput}
+            value={barangay}
+            onChange={(e) => {
+              setBarangay(e.target.value);
+              setBarangayTouched(true);
+            }}
+          >
+            <option value="">Not sure</option>
+            {BARANGAYS.map((b) => (
+              <option key={b.name} value={b.name}>
+                {b.name}
+              </option>
+            ))}
+          </select>
 
-      {errorMessage && <p className={styles.formError}>{errorMessage}</p>}
+          <label className={styles.fieldLabel} htmlFor="contact">
+            Contact number
+          </label>
+          <input
+            id="contact"
+            type="tel"
+            inputMode="tel"
+            className={styles.textInput}
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+            placeholder="09XX XXX XXXX, if you'd like a callback"
+          />
+        </div>
+      </details>
+
+      {errorMessage && !showErrors && <p className={styles.formError}>{errorMessage}</p>}
 
       <div className={styles.submitBar}>
         <button type="submit" className={styles.submitBtn} disabled={status === "submitting"}>
-          {status === "submitting" ? "Submitting…" : "Submit report"}
+          {status === "submitting" ? (
+            <>
+              <span className={styles.btnSpinner} aria-hidden />
+              Sending…
+            </>
+          ) : online ? (
+            "Submit report"
+          ) : (
+            "Save report · sends when online"
+          )}
         </button>
       </div>
     </form>

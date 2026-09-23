@@ -18,11 +18,21 @@ function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
+// Left-to-right tab order drives the slide direction (components/TabTransition).
+const ORDER = [LEFT.href, MAIN.href, RIGHT.href];
+function slideTypes(pathname: string, href: string): string[] {
+  const from = ORDER.findIndex((h) => isActive(pathname, h));
+  const to = ORDER.indexOf(href);
+  if (from === -1 || from === to) return [];
+  return [to > from ? "tab-forward" : "tab-back"];
+}
+
 function SideTab({ tab, pathname }: { tab: Tab; pathname: string }) {
   const active = isActive(pathname, tab.href);
   return (
     <Link
       href={tab.href}
+      transitionTypes={slideTypes(pathname, tab.href)}
       aria-current={active ? "page" : undefined}
       className={`flex flex-1 flex-col items-center justify-center gap-1 text-xs font-semibold transition-colors lg:flex-none lg:flex-row lg:gap-2 lg:rounded-lg lg:px-3 lg:py-2 lg:text-sm lg:hover:bg-slate-100 ${
         active ? "text-civic lg:bg-slate-100" : "text-slate-500 hover:text-slate-900"
@@ -48,6 +58,7 @@ export default function SiteNav() {
   return (
     <nav
       aria-label="Main"
+      style={{ viewTransitionName: "site-nav" }}
       className="fixed inset-x-0 bottom-0 z-[1100] border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-2px_12px_rgba(15,23,42,0.06)] lg:sticky lg:top-0 lg:bottom-auto lg:border-t-0 lg:border-b lg:pb-0 lg:shadow-sm"
     >
       <div className="mx-auto flex h-16 max-w-md items-stretch lg:h-16 lg:max-w-5xl lg:items-center lg:gap-1 lg:px-6">
@@ -61,6 +72,7 @@ export default function SiteNav() {
         {/* Main action: raised center button on phones, orange pill on desktop. */}
         <Link
           href={MAIN.href}
+          transitionTypes={slideTypes(pathname, MAIN.href)}
           aria-current={mainActive ? "page" : undefined}
           className="group flex flex-1 flex-col items-center justify-end pb-1.5 text-xs font-bold text-hazard lg:mx-1 lg:flex-none lg:justify-center lg:pb-0"
         >

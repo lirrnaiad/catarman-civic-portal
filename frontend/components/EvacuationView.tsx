@@ -12,9 +12,7 @@ import NearestCenterBanner from "@/components/NearestCenterBanner";
 const EvacuationMap = dynamic(() => import("@/components/EvacuationMap"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full w-full items-center justify-center text-sm text-slate-500">
-      Loading map…
-    </div>
+    <div className="skeleton h-full w-full" aria-label="Loading map" />
   ),
 });
 

@@ -70,16 +70,16 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    if (
-      !payload.description ||
-      Number.isNaN(payload.location?.lat) ||
-      Number.isNaN(payload.location?.lng)
-    ) {
+    // Only category and location are required; everything else is optional
+    // so a report takes two taps under stress. (isFinite also rejects a
+    // missing lat/lng, which isNaN(undefined) would let through.)
+    if (!Number.isFinite(payload.location?.lat) || !Number.isFinite(payload.location?.lng)) {
       return NextResponse.json(
-        { ok: false, id: payload.id, message: "Missing description or location." },
+        { ok: false, id: payload.id, message: "Missing location." },
         { status: 400 }
       );
     }
+    payload.description = (payload.description ?? "").trim();
 
     const stored: AdminReport = {
       ...payload,

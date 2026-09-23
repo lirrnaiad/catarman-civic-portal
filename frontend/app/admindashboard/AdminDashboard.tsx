@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import type { AdminReport, ReportStatus } from "@/lib/types";
+import Icon from "@/components/Icon";
 import ReportsTable, { type Filters } from "./ReportsTable";
 import styles from "./AdminDashboard.module.css";
 
 const AdminMap = dynamic(() => import("./AdminMap"), {
   ssr: false,
-  loading: () => <div className={styles.mapPlaceholder}>Loading map…</div>,
+  loading: () => <div className={`${styles.mapPlaceholder} skeleton`} aria-label="Loading map" />,
 });
 
 const POLL_INTERVAL_MS = 15_000;
@@ -22,6 +23,8 @@ export default function AdminDashboard({ initialReports }: AdminDashboardProps) 
   const [filters, setFilters] = useState<Filters>({ category: "", barangay: "", status: "" });
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [lastFetchedAt, setLastFetchedAt] = useState<Date | null>(null);
+  // Phones show one view at a time; desktop shows both side by side.
+  const [view, setView] = useState<"list" | "map">("list");
 
   const fetchReports = useCallback(async () => {
     const params = new URLSearchParams();
@@ -64,31 +67,65 @@ export default function AdminDashboard({ initialReports }: AdminDashboardProps) 
     }
   }, [fetchReports]);
 
+  const counts = {
+    new: reports.filter((r) => r.status === "new").length,
+    in_progress: reports.filter((r) => r.status === "in_progress").length,
+  };
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Reports</h1>
-        <span className={styles.subtitle}>
-          {reports.length} shown
-          {lastFetchedAt ? ` · updated ${lastFetchedAt.toLocaleTimeString()}` : ""}
-        </span>
+        <div>
+          <h1 className={styles.title}>Reports</h1>
+          <p className={styles.subtitle}>
+            <span className={styles.countNew}>{counts.new} new</span>
+            {" · "}
+            {counts.in_progress} in progress · {reports.length} shown
+            {lastFetchedAt ? ` · updated ${lastFetchedAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}` : ""}
+          </p>
+        </div>
+        <div className={styles.segmented} role="tablist" aria-label="View">
+          {(["list", "map"] as const).map((v) => (
+            <button
+              key={v}
+              type="button"
+              role="tab"
+              aria-selected={view === v}
+              className={`${styles.segment} ${view === v ? styles.segmentActive : ""}`}
+              onClick={() => setView(v)}
+            >
+              <Icon name={v} className="h-4 w-4" />
+              {v === "list" ? "List" : "Map"}
+            </button>
+          ))}
+        </div>
       </header>
 
-      <AdminMap
-        reports={reports}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
-        onStatusChange={handleStatusChange}
-      />
+      <div className={styles.body}>
+        <div className={`${styles.mapPane} ${view === "map" ? "" : styles.hiddenOnPhone}`}>
+          <AdminMap
+            reports={reports}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+            onStatusChange={handleStatusChange}
+          />
+        </div>
 
-      <ReportsTable
-        reports={reports}
-        filters={filters}
-        onFiltersChange={setFilters}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
-        onStatusChange={handleStatusChange}
-      />
+        <div className={`${styles.listPane} ${view === "list" ? "" : styles.hiddenOnPhone}`}>
+          <ReportsTable
+            reports={reports}
+            filters={filters}
+            onFiltersChange={setFilters}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+            onStatusChange={handleStatusChange}
+            onShowOnMap={(id) => {
+              setSelectedId(id);
+              setView("map");
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

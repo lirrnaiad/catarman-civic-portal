@@ -1,8 +1,8 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 1rem 1rem 6rem; /* bottom padding clears the sticky submit bar */
+  gap: 1.75rem;
+  padding: 1rem 1rem 7rem; /* bottom padding clears the sticky submit bar */
   max-width: 640px;
   margin: 0 auto;
   color: var(--ink);
@@ -18,45 +18,65 @@
 .sectionTitle {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 1.05rem;
+  gap: 0.5rem;
+  font-size: 1.1rem;
   font-weight: 700;
   margin: 0;
 }
 
-.stepNumber {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.6rem;
-  height: 1.6rem;
-  border-radius: 50%;
-  background: var(--civic);
-  color: var(--surface);
-  font-size: 0.85rem;
-  flex-shrink: 0;
+.optional {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink-subtle);
+  background: var(--surface-muted);
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
 }
+
+/* ---------- Category tiles: the main focus ---------- */
 
 .categoryGrid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.6rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
 }
 
 .categoryCard {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  border: 1.5px solid var(--line-strong);
-  border-radius: 10px;
-  padding: 0.75rem 0.9rem;
+  align-items: flex-start;
+  gap: 0.35rem;
+  min-height: 8.5rem;
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  padding: 0.9rem;
   background: var(--surface);
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 120ms ease;
+}
+
+.categoryCard:hover {
+  border-color: var(--civic-line);
+}
+
+.categoryCard:active {
+  transform: scale(0.97);
+}
+
+.categoryCard:has(.categoryRadio:focus-visible) {
+  outline: 3px solid var(--civic);
+  outline-offset: 2px;
 }
 
 .categoryCardActive {
   border-color: var(--civic);
   background: var(--civic-soft);
+  box-shadow: 0 6px 16px rgba(29, 78, 216, 0.15);
 }
 
 .categoryRadio {
@@ -69,25 +89,110 @@
   cursor: pointer;
 }
 
-.categoryLabel {
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.categoryHint {
-  font-size: 0.8rem;
-  color: var(--ink-subtle);
-}
-
-.mapPlaceholder {
-  height: 220px;
-  border-radius: 10px;
-  border: 1px solid var(--line-strong);
+.categoryIcon {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 14px;
+  background: var(--surface-muted);
+  color: var(--ink-muted);
+  transition: background-color 160ms ease, color 160ms ease, transform 200ms ease;
+}
+
+.categoryCardActive .categoryIcon {
+  background: var(--civic);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.categoryLabel {
+  font-weight: 700;
+  font-size: 0.98rem;
+  line-height: 1.2;
+}
+
+.categoryHint {
+  font-size: 0.78rem;
+  line-height: 1.3;
   color: var(--ink-subtle);
-  font-size: 0.9rem;
+}
+
+.categoryCheck {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--civic);
+  color: #fff;
+  animation: popIn 220ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.fieldError {
+  margin: 0;
+  color: var(--danger);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.mapPlaceholder {
+  height: 250px;
+  border-radius: 14px;
+}
+
+/* ---------- Photos: full-width drop zone ---------- */
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  min-height: 8rem;
+  padding: 1rem;
+  border: 2px dashed var(--line-strong);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--ink-muted);
+  text-align: center;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 120ms ease;
+}
+
+.dropzone:hover {
+  border-color: var(--civic);
+  background: var(--civic-soft);
+}
+
+.dropzone:active {
+  transform: scale(0.99);
+}
+
+.dropzoneIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--civic-soft);
+  color: var(--civic);
+}
+
+.dropzoneTitle {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.dropzoneHint {
+  font-size: 0.8rem;
+  color: var(--ink-subtle);
 }
 
 .photoGrid {
@@ -99,9 +204,10 @@
 .photoThumb {
   position: relative;
   aspect-ratio: 1 / 1;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--line);
+  animation: popIn 220ms ease-out both;
 }
 
 .photoThumb img {
@@ -111,41 +217,82 @@
   display: block;
 }
 
+/* 32px visible, 44px tap target via the ::before halo. */
 .removePhotoBtn {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 22px;
-  height: 22px;
+  top: 6px;
+  right: 6px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: none;
   background: rgba(15, 23, 42, 0.75);
-  color: var(--surface);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
 }
 
-.addPhotoBtn {
-  aspect-ratio: 1 / 1;
-  border-radius: 8px;
-  border: 1.5px dashed var(--line-strong);
-  background: var(--surface-muted);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-  color: var(--ink-muted);
-  font-size: 0.75rem;
+.removePhotoBtn::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
 }
 
 .hiddenInput {
   display: none;
 }
 
+/* ---------- Optional details ---------- */
+
+.details {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.detailsSummary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3.25rem;
+  padding: 0 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.detailsSummary::-webkit-details-marker {
+  display: none;
+}
+
+.detailsCount {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--civic);
+}
+
+.detailsChevron {
+  margin-left: auto;
+  color: var(--ink-subtle);
+  transition: transform 200ms ease;
+}
+
+.details[open] .detailsChevron {
+  transform: rotate(180deg);
+}
+
+.detailsBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1rem 1rem;
+  animation: fadeDown 200ms ease-out both;
+}
+
 .fieldLabel {
+  margin-top: 0.4rem;
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--ink-muted);
@@ -154,37 +301,38 @@
 .textarea,
 .textInput {
   border: 1.5px solid var(--line-strong);
-  border-radius: 8px;
-  padding: 0.65rem 0.75rem;
-  font-size: 0.95rem;
+  border-radius: 10px;
+  padding: 0.7rem 0.8rem;
+  min-height: 44px;
+  font-size: 1rem; /* 16px+ stops iOS zooming into the field */
   font-family: inherit;
   width: 100%;
   box-sizing: border-box;
+  background: var(--surface);
+  color: var(--ink);
 }
 
 .textarea:focus,
 .textInput:focus,
-.locateBtn:focus-visible,
-.addPhotoBtn:focus-visible,
-.submitBtn:focus-visible {
-  outline: 2px solid var(--civic);
+.dropzone:focus-visible,
+.submitBtn:focus-visible,
+.primaryBtn:focus-visible,
+.secondaryBtn:focus-visible,
+.detailsSummary:focus-visible {
+  outline: 3px solid var(--civic);
   outline-offset: 2px;
-}
-
-.hint {
-  font-size: 0.8rem;
-  color: var(--ink-subtle);
-  margin: 0;
 }
 
 .formError {
   background: var(--danger-soft);
   color: var(--danger);
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 0.6rem 0.8rem;
   font-size: 0.88rem;
   margin: 0;
 }
+
+/* ---------- Sticky submit ---------- */
 
 .submitBar {
   position: fixed;
@@ -195,66 +343,237 @@
   /* Extra bottom room on phones: the nav's raised Report button pokes ~28px
      above the tab bar and would otherwise cover this button. */
   padding: 0.75rem 1rem 2.25rem;
-  background: var(--surface);
-  border-top: 1px solid var(--line);
+  background: linear-gradient(to top, var(--surface) 75%, rgba(255, 255, 255, 0));
 }
 
 .submitBtn {
   width: 100%;
   max-width: 640px;
+  min-height: 52px;
   margin: 0 auto;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   background: var(--hazard);
-  color: var(--surface);
+  color: #fff;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.02rem;
   border: none;
-  border-radius: 10px;
-  padding: 0.9rem;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(194, 65, 12, 0.3);
+  transition: background-color 150ms ease, transform 120ms ease;
 }
 
 .submitBtn:hover:not(:disabled) {
   background: var(--hazard-hover);
 }
 
+.submitBtn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
 .submitBtn:disabled {
-  opacity: 0.6;
+  opacity: 0.75;
 }
 
-.secondaryBtn {
-  border: 1px solid var(--civic);
-  background: var(--surface);
-  color: var(--civic);
-  font-weight: 600;
-  border-radius: 8px;
-  padding: 0.65rem 1rem;
+.btnSpinner {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  animation: spin 700ms linear infinite;
 }
 
-.successCard {
-  max-width: 640px;
-  margin: 2.5rem auto;
-  padding: 1.5rem;
+/* ---------- Done screens: sent / saved offline ---------- */
+
+.doneCard {
+  max-width: 480px;
+  margin: 2rem auto 0;
+  padding: 1.5rem 1.25rem;
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
   align-items: center;
+  gap: 0.6rem;
   font-family: -apple-system, "Segoe UI", "Public Sans", system-ui, sans-serif;
+  animation: riseIn 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.successTitle {
+.doneIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+}
+
+.doneQueued .doneIcon {
+  background: #fef3c7;
+  color: #b45309;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+.doneSent .doneIcon {
+  background: #dcfce7;
+}
+
+.checkSvg {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.checkCircle {
+  fill: none;
+  stroke: #16a34a;
+  stroke-width: 3;
+  stroke-dasharray: 145;
+  stroke-dashoffset: 145;
+  animation: draw 500ms ease-out forwards;
+}
+
+.checkMark {
+  fill: none;
+  stroke: #16a34a;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: draw 350ms 400ms ease-out forwards;
+}
+
+.doneTitle {
   margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.doneBody {
+  margin: 0;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+
+.doneRef {
+  margin: 0.25rem 0 0.75rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+}
+
+.doneActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 48px;
+  border-radius: 12px;
+  font-weight: 700;
+  transition: background-color 150ms ease, transform 120ms ease;
+}
+
+.primaryBtn {
+  border: none;
+  background: var(--civic);
+  color: #fff;
+}
+
+.primaryBtn:hover {
+  background: var(--civic-hover);
+}
+
+.secondaryBtn {
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
   color: var(--civic);
 }
 
-.successBody {
-  margin: 0;
-  color: var(--ink-muted);
+.secondaryBtn:hover {
+  background: var(--civic-soft);
+}
+
+.primaryBtn:active,
+.secondaryBtn:active {
+  transform: scale(0.98);
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 14px rgba(245, 158, 11, 0);
+  }
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (min-width: 640px) {
-  .categoryGrid {
-    grid-template-columns: 1fr 1fr;
+  .doneActions {
+    flex-direction: row;
+  }
+
+  .doneActions > * {
+    flex: 1;
   }
 }
 
