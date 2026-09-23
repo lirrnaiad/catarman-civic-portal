@@ -10,6 +10,7 @@ Your combined branch was split in two so each track has its own branch. You're s
 | Before | Now | Why |
 |---|---|---|
 | `app/reportform/*` | `app/reportform/*` (unchanged path) | — |
+| Page at `/reportform` | Page at **`/`** (`app/page.tsx`); `/reportform` redirects there | Report is the main tab. The form component still lives in `app/reportform/` |
 | `app/lib/types.ts`, `id.ts`, `store.ts`, `offlineQueue.ts` | `lib/…` (repo-level `frontend/lib/`) | One `lib/` folder for the whole app. These are now **shared** files owned by integration |
 | `app/api/reports/route.ts` | same path | Now shared (integration-owned) |
 | Imports `@/app/lib/…` | `@/lib/…` | Follows the move |

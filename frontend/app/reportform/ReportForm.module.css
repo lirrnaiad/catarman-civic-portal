@@ -190,8 +190,9 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
-  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  bottom: var(--nav-h, 0px); /* sits on top of the bottom tab bar */
+  z-index: 1050;
+  padding: 0.75rem 1rem;
   background: var(--surface);
   border-top: 1px solid var(--line);
 }

@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* The portal is light-only so every tab looks the same (PRD: high-contrast,
+   outdoor-readable). `dark:` classes only apply under an explicit .dark
+   class, which nothing sets, so the OS dark-mode setting is ignored. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* =========================================
    CIVIC PALETTE (PRD §3 Branding)
    Civic blue for brand/primary actions, orange for hazard actions, red for
@@ -34,6 +39,16 @@
   --line-strong: #cbd5e1;    /* slate-300 */
   --surface: #ffffff;
   --surface-muted: #f1f5f9;  /* slate-100 */
+
+  /* Space the bottom tab bar takes on phones/tablets (0 once it moves to
+     the top on desktop). Anything pinned to the bottom sits above it. */
+  --nav-h: calc(4rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --nav-h: 0px;
+  }
 }
 
 @theme inline {
@@ -64,6 +79,7 @@ body {
 }
 
 body {
+  padding-bottom: var(--nav-h);
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;

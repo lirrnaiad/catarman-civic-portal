@@ -4,55 +4,62 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Icon, { type IconName } from "@/components/Icon";
 
-const LINKS: { href: string; label: string; icon: IconName; hazard?: boolean }[] = [
-  { href: "/", label: "Centers", icon: "home" },
-  { href: "/reportform", label: "Report", icon: "alert", hazard: true },
+// Report is the main tab (the pitch's core flow), so it comes first and is "/".
+const LINKS: { href: string; label: string; icon: IconName; main?: boolean }[] = [
+  { href: "/", label: "Report", icon: "alert", main: true },
+  { href: "/evacuation", label: "Centers", icon: "home" },
   { href: "/events", label: "Events", icon: "calendar" },
   { href: "/admindashboard", label: "Admin", icon: "grid" },
 ];
 
 /**
- * Portal-wide navigation, mounted once in the root layout. Sits above
- * Leaflet's panes (z-index up to 1000) so maps scroll underneath it.
- * On phones the tabs stack icon-over-label to fit four 44px+ targets.
+ * Portal-wide navigation, mounted once in the root layout.
+ * Phones/tablets: a bottom tab bar within thumb reach, like most mobile apps.
+ * Desktop (lg+): a top bar, where the admin dashboard is mostly used.
+ * Its phone height is --nav-h in globals.css; keep the two in sync.
+ * z-index sits above Leaflet's panes (up to 1000) so maps scroll underneath.
  */
 export default function SiteNav() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-[1100] bg-civic-strong text-white shadow-sm">
-      <div className="mx-auto flex h-14 max-w-5xl items-center gap-3 px-3 sm:px-6">
-        <Link href="/" className="flex shrink-0 items-center gap-2 font-bold" aria-label="Catarman Civic Portal home">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/15">
+    <nav
+      aria-label="Main"
+      className="fixed inset-x-0 bottom-0 z-[1100] border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-2px_12px_rgba(15,23,42,0.06)] lg:sticky lg:top-0 lg:bottom-auto lg:border-t-0 lg:border-b lg:pb-0 lg:shadow-sm"
+    >
+      <div className="mx-auto flex h-16 max-w-5xl items-stretch lg:h-14 lg:items-center lg:gap-1 lg:px-6">
+        <Link href="/" className="mr-auto hidden items-center gap-2 font-bold text-slate-900 lg:flex">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-civic-strong text-white">
             <Icon name="shield" />
           </span>
-          <span className="hidden leading-tight md:block">Catarman Civic Portal</span>
+          Catarman Civic Portal
         </Link>
 
-        <nav aria-label="Main" className="ml-auto flex flex-1 justify-end gap-1 sm:flex-none">
-          {LINKS.map(({ href, label, icon, hazard }) => {
-            const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
-            const tone = hazard
-              ? "bg-hazard text-white hover:bg-hazard-hover"
-              : active
-                ? "bg-white/20 text-white"
-                : "text-white/80 hover:bg-white/10 hover:text-white";
-            return (
-              <Link
-                key={href}
-                href={href}
-                aria-current={active ? "page" : undefined}
-                className={`flex min-h-11 min-w-16 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg px-2 text-[11px] font-semibold transition-colors sm:flex-none sm:flex-row sm:gap-2 sm:px-3 sm:text-sm ${tone} ${
-                  hazard && active ? "ring-2 ring-white/70" : ""
-                }`}
-              >
-                <Icon name={icon} className="h-5 w-5" />
-                {label}
-              </Link>
-            );
-          })}
-        </nav>
+        {LINKS.map(({ href, label, icon, main }) => {
+          const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              aria-current={active ? "page" : undefined}
+              className={`flex flex-1 flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors lg:flex-none lg:flex-row lg:gap-2 lg:rounded-lg lg:px-3 lg:py-2 lg:text-sm lg:hover:bg-slate-100 ${
+                active ? (main ? "text-hazard" : "text-civic") : "text-slate-500 hover:text-slate-900"
+              } ${active ? "lg:bg-slate-100" : ""}`}
+            >
+              {main ? (
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-hazard text-white shadow-sm lg:h-7 lg:w-7">
+                  <Icon name={icon} className="h-5 w-5 lg:h-4 lg:w-4" />
+                </span>
+              ) : (
+                <span className="flex h-8 items-center lg:h-7">
+                  <Icon name={icon} className="h-6 w-6 lg:h-5 lg:w-5" />
+                </span>
+              )}
+              {label}
+            </Link>
+          );
+        })}
       </div>
-    </header>
+    </nav>
   );
 }

@@ -9,7 +9,7 @@ export default function CapacityLegend({
   counts?: Record<CapacityStatus, number>;
 }) {
   return (
-    <ul className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-medium text-slate-200 sm:text-sm">
+    <ul className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-medium text-slate-700 sm:text-sm">
       {ORDER.map((status) => (
         <li key={status} className="flex items-center gap-1.5">
           <span
@@ -19,7 +19,7 @@ export default function CapacityLegend({
           />
           <span>
             {STATUS_LABEL[status]}
-            {counts && <span className="text-slate-400"> ({counts[status]})</span>}
+            {counts && <span className="text-slate-500"> ({counts[status]})</span>}
           </span>
         </li>
       ))}

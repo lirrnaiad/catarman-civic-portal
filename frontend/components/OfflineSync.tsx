@@ -69,5 +69,5 @@ export default function OfflineSync() {
   }
 
   if (!banner) return null;
-  return <div className="sticky top-14 z-[1090] mx-auto w-full max-w-5xl px-4 pt-3">{banner}</div>;
+  return <div className="sticky top-0 z-[1090] lg:top-14 mx-auto w-full max-w-5xl px-4 pt-3">{banner}</div>;
 }

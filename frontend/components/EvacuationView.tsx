@@ -12,7 +12,7 @@ import NearestCenterBanner from "@/components/NearestCenterBanner";
 const EvacuationMap = dynamic(() => import("@/components/EvacuationMap"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full w-full items-center justify-center text-sm text-slate-500 dark:text-slate-400">
+    <div className="flex h-full w-full items-center justify-center text-sm text-slate-500">
       Loading map…
     </div>
   ),
@@ -36,14 +36,14 @@ export default function EvacuationView() {
   const statusCounts = useMemo(() => getStatusCounts(EVACUATION_CENTERS), []);
 
   return (
-    <div className="flex flex-1 flex-col bg-slate-50 dark:bg-slate-950">
-      <header className="bg-civic-strong px-4 py-4 sm:px-6">
-        <div className="mx-auto flex max-w-5xl flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex flex-1 flex-col">
+      <header className="mx-auto w-full max-w-5xl px-4 pt-6 sm:px-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-blue-300">
+            <p className="text-xs font-semibold uppercase tracking-wider text-civic">
               Catarman, Northern Samar · MDRRMO
             </p>
-            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
               Evacuation Centers
             </h1>
           </div>
@@ -62,7 +62,7 @@ export default function EvacuationView() {
           near-zero box and only renders a sliver of tiles. h-[70vh] is
           definite regardless of ancestor flex sizing.
         */}
-        <div className="h-[70vh] min-h-[420px] overflow-hidden rounded-lg border border-slate-200 shadow-sm dark:border-slate-800">
+        <div className="h-[70vh] min-h-[420px] overflow-hidden rounded-lg border border-slate-200 shadow-sm">
           <EvacuationMap
             centers={EVACUATION_CENTERS}
             userLocation={userLocation}
