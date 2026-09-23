@@ -38,7 +38,6 @@ git merge origin/integration
 2. **Events API, Story 4.2:** `GET/POST /api/events` and `PATCH/DELETE /api/events/[id]`, backed by the MySQL `events` table (`backend/schema.sql`: `title`, `agency`, `event_datetime`, `location`, `description`). Use the shared pool from `lib/db.ts`; `lib/store.ts` shows the query pattern. Put your queries in your own `lib/events-store.ts`, and move your seed events into `backend/seed.sql` via Fabia. In Next 16, route params are a Promise: `const { id } = await params`.
 3. **Shared auth, Story 4.1.** Build it once and coordinate with Inovero, who needs it to gate the admin dashboard (FR6).
 4. **Calendar month buttons** (the chevrons) don't do anything yet. Either make them work or hide them for the demo.
-5. The sidebar's **Services / Alerts / About** buttons and the "CivicConnect" name will be replaced when Fabia builds the portal-wide nav shell. Don't spend time on them.
 
 ## Rules for your branch
 
