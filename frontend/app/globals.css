@@ -1,22 +1,57 @@
 @import "tailwindcss";
 
+/* =========================================
+   CIVIC PALETTE (PRD §3 Branding)
+   Civic blue for brand/primary actions, orange for hazard actions, red for
+   danger. Every text pairing below meets WCAG AA on white. Capacity status
+   colors (green/amber/red) live in lib/evacuation-utils.ts and stay separate
+   from the brand so a blue button never reads as a capacity state.
+   Plain CSS variables so CSS modules can use them too: var(--civic).
+========================================= */
+
 :root {
-  --background: #f4f8f8;
-  --foreground: #171717;
+  --background: #f8fafc;     /* slate-50 */
+  --foreground: #0f172a;     /* slate-900 */
+
+  --civic: #1d4ed8;          /* blue-700, 6.7:1 on white */
+  --civic-hover: #1e40af;    /* blue-800 */
+  --civic-strong: #172554;   /* blue-950: headers, sidebar */
+  --civic-soft: #eff6ff;     /* blue-50: selected/tinted surfaces */
+  --civic-muted: #dbeafe;    /* blue-100: chips, icon wells */
+  --civic-line: #bfdbfe;     /* blue-200: hover borders */
+
+  --hazard: #c2410c;         /* orange-700, 5.2:1 on white: report CTA */
+  --hazard-hover: #9a3412;   /* orange-800 */
+  --hazard-soft: #fff7ed;    /* orange-50 */
+
+  --danger: #b91c1c;         /* red-700 */
+  --danger-soft: #fef2f2;    /* red-50 */
+
+  --ink: #0f172a;            /* slate-900 */
+  --ink-muted: #334155;      /* slate-700 */
+  --ink-subtle: #64748b;     /* slate-500, 4.8:1 on white */
+  --line: #e2e8f0;           /* slate-200 */
+  --line-strong: #cbd5e1;    /* slate-300 */
+  --surface: #ffffff;
+  --surface-muted: #f1f5f9;  /* slate-100 */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-civic: var(--civic);
+  --color-civic-hover: var(--civic-hover);
+  --color-civic-strong: var(--civic-strong);
+  --color-civic-soft: var(--civic-soft);
+  --color-civic-muted: var(--civic-muted);
+  --color-civic-line: var(--civic-line);
+  --color-hazard: var(--hazard);
+  --color-hazard-hover: var(--hazard-hover);
+  --color-hazard-soft: var(--hazard-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 html,
@@ -147,7 +182,7 @@ body {
 
 .civic-card:hover {
   transform: translateY(-2px);
-  border-color: #a7f3d0;
+  border-color: var(--civic-line);
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.07);
 }
 
@@ -169,13 +204,7 @@ body {
 
   border: 0;
 
-  background:
-    linear-gradient(
-      to bottom,
-      #16a36a,
-      #16a36a 45%,
-      #129a72
-    );
+  background: var(--civic-strong);
 
   color: white;
 
