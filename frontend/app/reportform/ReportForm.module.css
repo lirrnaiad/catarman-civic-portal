@@ -1,0 +1,255 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 1rem 6rem; /* bottom padding clears the sticky submit bar */
+  max-width: 640px;
+  margin: 0 auto;
+  color: #16211f;
+  font-family: -apple-system, "Segoe UI", "Public Sans", system-ui, sans-serif;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: #1b3a4b;
+  color: #fff;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+}
+
+.categoryCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  border: 1.5px solid #d7ddd9;
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  background: #fff;
+}
+
+.categoryCardActive {
+  border-color: #1b3a4b;
+  background: #eef3f2;
+}
+
+.categoryRadio {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.categoryLabel {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.categoryHint {
+  font-size: 0.8rem;
+  color: #5c6b67;
+}
+
+.mapPlaceholder {
+  height: 220px;
+  border-radius: 10px;
+  border: 1px solid #d7ddd9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7a76;
+  font-size: 0.9rem;
+}
+
+.photoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.photoThumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #d7ddd9;
+}
+
+.photoThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.removePhotoBtn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(22, 33, 31, 0.75);
+  color: #fff;
+  line-height: 1;
+  font-size: 0.95rem;
+}
+
+.addPhotoBtn {
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  border: 1.5px dashed #b9c3bf;
+  background: #f7f8f6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  color: #4a5a56;
+  font-size: 0.75rem;
+}
+
+.addPhotoIcon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.fieldLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #3c4a46;
+}
+
+.textarea,
+.textInput {
+  border: 1.5px solid #d7ddd9;
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.textarea:focus,
+.textInput:focus,
+.locateBtn:focus-visible,
+.addPhotoBtn:focus-visible,
+.submitBtn:focus-visible {
+  outline: 2px solid #1b3a4b;
+  outline-offset: 2px;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #6b7a76;
+  margin: 0;
+}
+
+.formError {
+  background: #fbeceb;
+  color: #b3261e;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.submitBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  background: #fff;
+  border-top: 1px solid #e2e6e3;
+}
+
+.submitBtn {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  display: block;
+  background: #e8763a;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem;
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+}
+
+.secondaryBtn {
+  border: 1px solid #1b3a4b;
+  background: #fff;
+  color: #1b3a4b;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+}
+
+.successCard {
+  max-width: 640px;
+  margin: 2.5rem auto;
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  font-family: -apple-system, "Segoe UI", "Public Sans", system-ui, sans-serif;
+}
+
+.successTitle {
+  margin: 0;
+  color: #1b3a4b;
+}
+
+.successBody {
+  margin: 0;
+  color: #3c4a46;
+}
+
+@media (min-width: 640px) {
+  .categoryGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
