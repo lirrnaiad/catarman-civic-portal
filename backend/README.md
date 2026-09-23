@@ -26,7 +26,7 @@ With XAMPP you can instead open phpMyAdmin → create `catarman_civic` → **Imp
 `frontend/.env.local` and fill in your password (empty for XAMPP):
 
 ```
-DB_HOST=localhost
+DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_NAME=catarman_civic
 DB_USER=root
