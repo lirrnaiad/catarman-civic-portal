@@ -1,0 +1,9 @@
+# HTTPS in front of the app. With a real hostname in SITE_ADDRESS
+# (e.g. mc-server-lirrnaiad.eastasia.cloudapp.azure.com), Caddy gets and
+# renews a Let's Encrypt certificate automatically; ports 80 and 443 must
+# be open. Caddy sets X-Forwarded-For to the client's address, which the
+# login rate limiter reads.
+{$SITE_ADDRESS} {
+	encode zstd gzip
+	reverse_proxy app:3000
+}

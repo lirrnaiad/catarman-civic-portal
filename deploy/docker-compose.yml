@@ -1,0 +1,71 @@
+# Catarman Civic Portal on one VM: MySQL + the Next.js app + Caddy (HTTPS).
+# Settings come from deploy/.env (copy deploy/.env.example). See docs/DEPLOY-VM.md.
+#
+#   docker compose up -d --build     start / update
+#   docker compose logs -f app       follow app logs ([audit] lines)
+#   docker compose down              stop (data is kept in volumes)
+
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: catarman_civic
+      MYSQL_USER: civic
+      MYSQL_PASSWORD: ${DB_PASS:?set DB_PASS in deploy/.env}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:?set DB_ROOT_PASS in deploy/.env}
+    # Small footprint: this shares a VM with other workloads.
+    command: >
+      --innodb-buffer-pool-size=128M
+      --performance-schema=OFF
+      --max-connections=50
+      --max-allowed-packet=32M
+    volumes:
+      - db-data:/var/lib/mysql
+      # Runs once, on the first start with an empty volume (in name order).
+      - ../backend/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ../backend/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -ucivic -p\"$$MYSQL_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    # Not published: only the app container can reach it.
+
+  app:
+    build: ../frontend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: catarman_civic
+      DB_USER: civic
+      DB_PASS: ${DB_PASS}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD in deploy/.env}
+      AGENCY_PASSWORDS: ${AGENCY_PASSWORDS:-}
+      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:?set ADMIN_SESSION_SECRET in deploy/.env}
+      ADMIN_COOKIE_INSECURE: ${ADMIN_COOKIE_INSECURE:-}
+    # Only Caddy talks to the app; it is not exposed on the VM's ports.
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:?set SITE_ADDRESS in deploy/.env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  db-data:
+  caddy-data:
+  caddy-config:
